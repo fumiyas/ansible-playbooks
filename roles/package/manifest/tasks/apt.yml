@@ -1,0 +1,7 @@
+- name: "Debian packages (apt)"
+  apt:
+    name={{item}}
+    state=present
+  with_items: "{{debian_packages}}"
+  become: true
+

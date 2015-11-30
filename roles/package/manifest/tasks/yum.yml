@@ -1,0 +1,10 @@
+- name: "RPM packages (yum)"
+  yum:
+    name={{item.name}}
+    state={{item.state if item.state is defined else 'present'}}
+    enablerepo={{ item.enablerepo if item.has_key('enablerepo') else none }}
+    disablerepo={{ item.disablerepo if item.has_key('disablerepo') else none }}
+  with_items: "{{package_manifest}}"
+  become: true
+  when: package_manifest is defined
+

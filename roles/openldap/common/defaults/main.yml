@@ -1,0 +1,37 @@
+openldap_server_ports:
+  - protocol: tcp
+    port: 389
+  - protocol: tcp
+    port: 636
+openldap_server_services:
+  - ldapi:///
+  - ldap:///
+  - ldaps:///
+openldap_server_options:
+openldap_server_db_backend: bdb
+openldap_server_bdb_cache_size: 64
+
+openldap_master_id: -1
+
+openldap_password_hash_name: CRYPT
+openldap_password_crypt_salt_format: "$5$%.16s"
+
+openldap_schemas:
+  - core
+  - cosine
+  - nis
+  - inetorgperson
+  - ppolicy
+
+openldap_master_rdn: cn=master
+openldap_master_password: "{DISABLED}PASSWORD"
+openldap_slave_rdn: cn=slave
+openldap_slave_password: "{DISABLED}PASSWORD"
+openldap_admin_rdn: cn=admin
+openldap_admin_password: "{DISABLED}PASSWORD"
+
+openldap_users_rdn: ou=Users
+openldap_groups_rdn: ou=Groups
+openldap_policies_rdn: ou=Policies
+openldap_default_policy_rdn: cn=default
+

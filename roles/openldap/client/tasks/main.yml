@@ -1,0 +1,14 @@
+- include: roles/package/manifest/tasks/main.yml
+  vars:
+    package_manifest: "{{openldap_client_package_manifest}}"
+
+- name: "ldap.conf"
+  template:
+    src=ldap.conf.j2
+    dest={{openldap_dirs_sysconf}}/ldap.conf
+    owner=root
+    group=root
+    mode=0644
+    backup=true
+  become: true
+

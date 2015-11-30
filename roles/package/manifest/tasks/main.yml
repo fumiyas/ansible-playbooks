@@ -1,0 +1,2 @@
+- include: roles/package/manifest/tasks/{{ansible_pkg_mgr}}.yml
+

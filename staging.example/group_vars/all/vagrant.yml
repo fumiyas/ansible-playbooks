@@ -1,0 +1,6 @@
+vagrant:
+  network: 10.255.0.0/24
+  vm:
+    box: bento/centos-7.1
+    name_prefix: example_
+

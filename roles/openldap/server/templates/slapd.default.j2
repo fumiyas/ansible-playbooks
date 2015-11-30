@@ -1,0 +1,10 @@
+{% if ansible_os_family == 'Debian' %}
+SLAPD_SERVICES="{{openldap_server_services |join(' ')}}"
+{% else %}
+SLAPD_URLS="{{openldap_server_services |join(' ')}}"
+{% endif %}
+{% if ansible_os_family == 'RedHat' and ansible_distribution_version|int <= 6 %}
+SLAPD_LDAP="no"
+{% endif %}
+SLAPD_OPTIONS="{{openldap_server_options}}"
+

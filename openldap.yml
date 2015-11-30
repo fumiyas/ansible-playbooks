@@ -1,0 +1,11 @@
+- name: "OpenLDAP client and server"
+  hosts: openldap
+  roles:
+    - openldap/client
+    - openldap/server
+
+- name: "OpenLDAP client"
+  hosts: openldap-client
+  roles:
+    - openldap/client
+

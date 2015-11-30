@@ -1,0 +1,243 @@
+## OpenLDAP: slapd.conf(5)
+
+## Schema
+## ======================================================================
+
+{% for schema in openldap_schemas %}
+include {{openldap_dirs_sysconf}}/schema/{{schema}}.schema
+{% endfor %}
+
+## Dynamically loadable module
+## ======================================================================
+
+moduleload syncprov
+moduleload ppolicy
+
+## Global configuration
+## ======================================================================
+
+pidfile {{openldap_dirs_run}}/slapd.pid
+argsfile {{openldap_dirs_run}}/slapd.args
+
+loglevel stats
+
+threads 16
+tool-threads 4
+timelimit 30
+sizelimit unlimited
+
+{% if openldap_tls_ca_certificate_file is defined %}
+TLSCACertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate_file}}
+{% endif %}
+{% if openldap_tls_certificate_file is defined %}
+TLSCertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_certificate_file}}
+TLSCertificateKeyFile {{openldap_dirs_sysconf}}/private/{{openldap_tls_key_file}}
+{% endif %}
+TLSProtocolMin 3.1
+TLSCipherSuite ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
+
+password-hash {{'{'}}{{openldap_password_hash_name}}{{'}'}}
+{% if openldap_password_crypt_salt_format is defined %}
+password-crypt-salt-format "{{openldap_password_crypt_salt_format}}"
+{% endif %}
+
+attributeoptions lang- phonetic
+
+## Access control for Root DSE
+## ----------------------------------------------------------------------
+
+access to dn.subtree=""
+	by * read
+
+{% if openldap_update_referral_uri is defined %}
+## Automatic referral chasing
+## ======================================================================
+
+overlay chain
+
+chain-uri		{{openldap_update_referral_uri}}
+chain-return-error	on
+chain-idassert-bind
+	mode="self"
+	bindmethod=simple
+	binddn="{{openldap_slave_rdn}},{{openldap_suffix}}"
+	credentials="{{openldap_slave_password}}"
+
+{% endif %}
+## Database #1: {{openldap_suffix}}
+## ======================================================================
+
+database {{openldap_server_db_backend}}
+suffix "{{openldap_suffix}}"
+directory {{openldap_dirs_db}}
+
+rootdn "{{openldap_master_rdn}},{{openldap_suffix}}"
+#rootpw {SSHA}xxxx
+
+mode 0640
+lastmod on
+checkpoint 512 5
+cachesize 10000
+idlcachesize 30000
+
+monitoring on
+
+{% if openldap_server_db_backend in ['bdb', 'hdb'] %}
+## BDB/HDB configurations
+## ----------------------------------------------------------------------
+
+## Data and log directory
+dbconfig set_data_dir .
+dbconfig set_lg_dir .
+## Cache size (GBytes, Bytes, Number of cache regions)
+dbconfig set_cachesize 0 {{openldap_server_bdb_cache_size * 1024 * 1024}} 1
+## Number of objects that can be locked at the same time.
+dbconfig set_lk_max_objects 5000
+## Number of locks (both requested and granted)
+dbconfig set_lk_max_locks 5000
+## Number of lockers
+dbconfig set_lk_max_lockers 5000
+## Remove unused log files
+dbconfig set_flags DB_LOG_AUTOREMOVE
+
+{% endif %}
+## Index
+## ----------------------------------------------------------------------
+
+index objectClass		eq
+index modifyTimestamp		eq
+index ou			eq
+index cn			eq,sub
+index sn			eq
+index uid			eq
+index displayName		eq
+index mail			eq
+index uidNumber			eq
+index gidNumber			eq
+index memberUID			eq
+index uniqueMember		eq
+index member    		eq
+
+index host			eq
+index pwdFailureTime		eq
+index pwdAccountLockedTime	eq
+
+index entryCSN			eq
+index entryUUID			eq
+
+## Limits
+## ----------------------------------------------------------------------
+
+limits dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth"
+	time=unlimited
+	size=unlimited
+
+limits dn="{{openldap_master_rdn}},{{openldap_suffix}}"
+	time=unlimited
+	size=unlimited
+
+limits dn="{{openldap_slave_rdn}},{{openldap_suffix}}"
+	time=unlimited
+	size=unlimited
+
+## Access control
+## ----------------------------------------------------------------------
+
+access to dn.subtree="{{openldap_users_rdn}},{{openldap_suffix}}"
+	  attrs=pwdFailureTime,pwdAccountLockedTime
+	by dn="{{openldap_slave_rdn}},{{openldap_suffix}}" manage
+	by * break
+
+access to *
+	by dn="{{openldap_slave_rdn}},{{openldap_suffix}}" read
+	by * break
+
+access to *
+	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" manage
+	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" manage
+	by * break
+
+access to attrs=userPassword
+	by anonymous auth
+	by * none
+
+access to attrs=pwdHistory,authzFrom,authzTo
+	by * none
+
+access to *
+	by * read
+
+## Master (provider)
+## ----------------------------------------------------------------------
+
+{% if openldap_master_id is defined and openldap_master_id > 0 %}
+serverID {{openldap_master_id}}
+
+{% endif %}
+overlay syncprov
+
+syncprov-checkpoint 128 5
+syncprov-sessionlog 128
+
+{% if openldap_slave_masters is defined %}
+## Slave (consumer)
+## ----------------------------------------------------------------------
+#
+{% for master in openldap_slave_masters %}
+syncrepl rid={{'%03d' |format(loop.index)}}
+	provider="{{master.uri}}"
+	type=refreshAndPersist
+	retry="5 10 30 +"
+	keepalive=300:5:10
+	searchbase="{{openldap_suffix}}"
+	scope=sub
+	schemachecking=off
+	bindmethod=simple
+	binddn="{{openldap_slave_rdn}},{{openldap_suffix}}"
+	credentials="{{openldap_slave_password}}"
+
+{% endfor %}
+
+{% if openldap_master_id is defined and openldap_master_id > 0 %}
+mirrormode on
+
+{% endif %}
+{% if openldap_update_referral_uri is defined %}
+updateref {{openldap_update_referral_uri}}
+
+{% endif %}
+{% endif %}
+## Password policy
+## ----------------------------------------------------------------------
+
+overlay ppolicy
+
+ppolicy_default "{{openldap_default_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}"
+ppolicy_use_lockout		on
+ppolicy_hash_cleartext		on
+{% if openldap_update_referral_uri is defined %}
+ppolicy_forward_updates		on
+{% endif %}
+
+## Database #2: cn=config (read-only)
+## ======================================================================
+
+database config
+
+access to *
+	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" read
+	by dn="{{openldap_master_rdn}},{{openldap_suffix}}" read
+	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" read
+	by * none
+
+## Database #3: cn=monitor
+## ======================================================================
+
+database monitor
+
+access to *
+	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" read
+	by dn="{{openldap_master_rdn}},{{openldap_suffix}}" read
+	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" read
+	by * none
+

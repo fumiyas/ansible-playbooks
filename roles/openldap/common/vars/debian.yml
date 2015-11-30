@@ -1,0 +1,14 @@
+openldap_server_package_manifest:
+  - name: slapd
+openldap_client_package_manifest:
+  - name: ldap-utils
+
+openldap_server_service_name: slapd
+openldap_server_default_file: /etc/default/slapd
+
+openldap_dirs_sysconf: /etc/ldap
+openldap_dirs_bin: /usr/bin
+openldap_dirs_sbin: /usr/sbin
+openldap_dirs_db: /var/lib/ldap
+openldap_dirs_run: /var/run/slapd
+

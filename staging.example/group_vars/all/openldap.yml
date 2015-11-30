@@ -1,0 +1,7 @@
+openldap_suffix: dc=example,dc=jp
+openldap_organization: "Example Corp."
+
+openldap_master_password: master-pass
+openldap_slave_password: slave-pass
+openldap_admin_password: admin-pass
+
