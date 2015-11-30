@@ -1,0 +1,9 @@
+{% for host in hosts %}
+{{host.ips[0].address}} {{host.hostname}}
+{% if host.aliases is defined %}
+{% for alias in host.aliases %}
+{{host.ips[0].address}} {{alias}}
+{% endfor %}
+{% endif %}
+{% endfor %}
+

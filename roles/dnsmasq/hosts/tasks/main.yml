@@ -1,0 +1,78 @@
+- include: roles/package/manifest/tasks/main.yml
+  vars:
+    package_manifest: "{{dnsmasq_package_manifest}}"
+
+- name: "dnsmasq.conf"
+  copy:
+    src=dnsmasq.conf
+    dest=/etc/dnsmasq.conf
+    mode=0755
+    owner=root
+    group=root
+    backup=true
+  become: true
+  notify: dnsmasq reload
+
+- name: "dnsmasq.hosts"
+  template:
+    src=dnsmasq.hosts.j2
+    dest=/etc/dnsmasq.hosts
+    mode=0755
+    owner=root
+    group=root
+    backup=true
+  become: true
+  notify: dnsmasq reload
+
+## FIXME: RHEL specific
+- block:
+
+  - name: "dhclient.d/dnsmasq.sh"
+    copy:
+      src=dhclient-dnsmasq.sh
+      dest=/etc/dhcp/dhclient.d/dnsmasq.sh
+      mode=0755
+      owner=root
+      group=root
+      backup=true
+    become: true
+    notify: network reload
+
+  - name: "/etc/sysconfig/network-scripts/ifcfg-* list"
+    shell: |
+      ls /etc/sysconfig/network-scripts/ifcfg-* |fgrep -v .
+    register: ifcfgs
+    changed_when: false
+
+  - name: "PEERDNS=no"
+    lineinfile:
+      dest={{item}}
+      state=present
+      regexp='^PEERDNS='
+      line='PEERDNS=no'
+      backup=true
+    with_items: "{{ifcfgs.stdout_lines}}"
+    become: true
+    notify: network reload
+
+  when: ansible_os_family == 'RedHat'
+
+- name: "resolv.conf"
+  copy:
+    src=resolv.conf
+    dest=/etc/resolv.conf
+    mode=0755
+    owner=root
+    group=root
+    backup=true
+  become: true
+
+- name: "dnsmasq service"
+  service:
+    name={{item}}
+    state=running
+    enabled=true
+  with_items:
+    - dnsmasq
+  become: true
+

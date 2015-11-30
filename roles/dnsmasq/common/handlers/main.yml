@@ -1,0 +1,15 @@
+- name: "dnsmasq reload"
+  ## reload not supported
+  service:
+    name=dnsmasq
+    state=restarted
+  become: true
+
+## FIXME: RHEL and Debian specific
+- name: "network reload"
+  ## reload not supported
+  service:
+    name={{'network' if ansible_os_family == 'RedHat' else 'networking'}}
+    state=restarted
+  become: true
+
