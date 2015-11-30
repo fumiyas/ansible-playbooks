@@ -1,6 +1,11 @@
 My Ansible playbooks
 ======================================================================
 
+  * Copyright (c) 2015 SATOH Fumiyasu @ OSS Technology Corp., Japan
+  * License: GPLv3
+  * URL: <https://GitHub.com/fumiyas/ansible-playbooks>
+  * Twitter: <https://twitter.com/satoh_fumiyasu>
+
 NOTE: Ansible 2.0+ required
 
 How to use

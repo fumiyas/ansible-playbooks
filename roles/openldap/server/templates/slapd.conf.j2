@@ -182,7 +182,7 @@ syncprov-sessionlog 128
 {% if openldap_slave_masters is defined %}
 ## Slave (consumer)
 ## ----------------------------------------------------------------------
-#
+
 {% for master in openldap_slave_masters %}
 syncrepl rid={{'%03d' |format(loop.index)}}
 	provider="{{master.uri}}"
@@ -197,7 +197,6 @@ syncrepl rid={{'%03d' |format(loop.index)}}
 	credentials="{{openldap_slave_password}}"
 
 {% endfor %}
-
 {% if openldap_master_id is defined and openldap_master_id > 0 %}
 mirrormode on
 
