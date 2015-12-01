@@ -1,9 +1,11 @@
-{% for host in hosts %}
-{{host.ips[0].address}} {{host.hostname}}
-{% if host.aliases is defined %}
-{% for alias in host.aliases %}
-{{host.ips[0].address}} {{alias}}
+{% for name, host in hosts.iteritems() %}
+{{host.networks[0].address}} {{host.hostname}}
+{% for network in host.networks %}
+{% if network.has_key('aliases') %}
+{% for alias in network.aliases %}
+{{network.address}} {{alias}}
 {% endfor %}
 {% endif %}
 {% endfor %}
 
+{% endfor %}
