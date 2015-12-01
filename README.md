@@ -10,7 +10,11 @@ Requirements
 ----------------------------------------------------------------------
 
   * Ansible 2.0+
-  * Vagrant (for staging environment, tested on Vagrant 1.7.4)
+    * Not yet released, tested on Ansible 2.0.0rc1
+  * Vagrant
+    * For staging environment, tested on Vagrant 1.7.4
+  * VirtualBox 
+    * For staging environment, tested on VirtualBox 5.0.10
 
 How to use
 ----------------------------------------------------------------------
