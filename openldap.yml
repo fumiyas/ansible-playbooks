@@ -1,8 +1,7 @@
 - name: "OpenLDAP client and server"
   hosts: openldap
   roles:
-    - openldap/client
-    - openldap/server
+    - openldap
   tags:
     - openldap
     - openldap-client

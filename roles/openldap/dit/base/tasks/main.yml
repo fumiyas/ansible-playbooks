@@ -1,0 +1,97 @@
+- name: "Base DIT data in LDIF file"
+  template:
+    src=base.ldif.j2
+    dest={{openldap_dirs_sysconf}}/base.ldif
+    owner=root
+    group=ldap
+    mode=0640
+    backup=true
+  become: true
+  register: base_dit_data
+
+- name: "Base DIT in LDAP server (prepare)"
+  shell: |
+    set -eu
+    umask 0077
+    : >{{openldap_dirs_sysconf}}/base.current.ldif
+    : >{{openldap_dirs_sysconf}}/base.diff.ldif
+  become: true
+  changed_when: false
+
+- name: "Base DIT in LDAP server"
+  shell: |
+    set -eu
+    ret=0
+    {{openldap_dirs_bin}}/ldapsearch \
+      -H ldapi:/// \
+      -QY external \
+      -b '{{item.base}}' \
+      -s '{{item.scope}}' \
+      -LLL \
+      -o ldif-wrap=no \
+      '(objectClass=*)' \
+      '*' \
+      pwdPolicySubentry \
+    >>{{openldap_dirs_sysconf}}/base.current.ldif \
+    || ret=$? \
+    ;
+    [ "$ret" -eq 0 ] || [ "$ret" -eq 32 ] || exit $ret
+  with_items:
+    - base: "{{openldap_suffix}}"
+      scope: base
+    - base: "{{openldap_suffix}}"
+      scope: one
+    - base: "{{openldap_policies_rdn}},{{openldap_suffix}}"
+      scope: one
+  become: true
+  changed_when: false
+
+- name: "Check if base.current.ldif has data"
+  stat:
+    path={{openldap_dirs_sysconf}}/base.current.ldif
+  become: true
+  register: base_dit_current
+
+- name: "Base DIT provisioning (full)"
+  shell: |
+    {{openldap_dirs_bin}}/ldapadd \
+      -H ldapi:/// \
+      -QY external \
+      -f {{openldap_dirs_sysconf}}/base.ldif \
+    ;
+  become: true
+  when: base_dit_current.stat.size == 0
+
+- name: "Compare current base DIT in LDAP server and base.ldif"
+  script: |
+    files/ldifdiff.pl \
+      --exclude-attrs=userPassword \
+      {{openldap_dirs_sysconf}}/base.current.ldif \
+      {{openldap_dirs_sysconf}}/base.ldif \
+    >{{openldap_dirs_sysconf}}/base.diff.ldif
+  become: true
+  when: base_dit_current.stat.size > 0
+  changed_when: false
+
+- name: "Check if base.diff.ldif has data"
+  stat:
+    path={{openldap_dirs_sysconf}}/base.diff.ldif
+  become: true
+  register: base_dit_diff
+
+- name: "Base DIT provisioning (incremental)"
+  shell: |
+    awk '
+      {print}
+      /^dn:/ {dn=$0}
+      /^changetype: add$/ {
+        system("sed -n \\"/^"dn"/,/^$/ { /^userPassword:/p }\\" base.ldif")
+      }' \
+      {{openldap_dirs_sysconf}}/base.diff.ldif \
+    {{openldap_dirs_bin}}/ldapmodify \
+      -H ldapi:/// \
+      -QY external \
+    ;
+  become: true
+  when: base_dit_current.stat.size > 0 and base_dit_diff.stat.size > 0
+

@@ -1,0 +1,4 @@
+dependencies:
+  - role: openldap/client
+  - role: openldap/dit/common
+

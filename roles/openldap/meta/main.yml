@@ -1,0 +1,6 @@
+dependencies:
+  - role: openldap/client
+  - role: openldap/server
+  - role: openldap/dit/base
+    when: openldap_dit_provisioning is defined and 'base' in openldap_dit_provisioning
+

@@ -1,0 +1,82 @@
+dn: {{openldap_suffix}}
+objectClass: organization
+objectClass: dcObject
+o: {{openldap_organization}}
+dc: {{openldap_suffix |regex_replace(',.*$', '') |regex_replace('^.+=', '')}}
+
+dn: {{openldap_master_rdn}},{{openldap_suffix}}
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: {{openldap_master_rdn |regex_replace('^.*=','')}}
+description: LDAP master process (rootdn)
+{% if openldap_master_password is defined %}
+userPassword: {{openldap_master_password}}
+{% else %}
+userPassword: {{'{DISABLED}PASSWORD'}}
+{% endif %}
+pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
+
+dn: {{openldap_slave_rdn}},{{openldap_suffix}}
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: {{openldap_slave_rdn |regex_replace('^.*=','')}}
+description: LDAP slave process (replication)
+{% if openldap_slave_password is defined %}
+userPassword: {{openldap_slave_password}}
+{% else %}
+userPassword: {{'{DISABLED}PASSWORD'}}
+{% endif %}
+pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
+{% if openldap_ldapmanager_rdn is defined %}
+
+dn: {{openldap_ldapmanager_rdn}},{{openldap_suffix}}
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: {{openldap_ldapmanager_rdn |regex_replace('^.*=','')}}
+description: LDAP Manager process (provisioning)
+{% if openldap_ldapmanager_password is defined %}
+userPassword: {{openldap_ldapmanager_password}}
+{% else %}
+userPassword: {{'{DISABLED}PASSWORD'}}
+{% endif %}
+pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
+{% endif %}
+
+dn: {{openldap_admin_rdn}},{{openldap_suffix}}
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: {{openldap_admin_rdn |regex_replace('^.*=','')}}
+description: LDAP administrator (for human)
+{% if openldap_admin_password is defined %}
+userPassword: {{openldap_admin_password}}
+{% else %}
+userPassword: {{'{DISABLED}PASSWORD'}}
+{% endif %}
+pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
+
+dn: {{openldap_users_rdn}},{{openldap_suffix}}
+objectClass: organizationalUnit
+ou: {{openldap_users_rdn |regex_replace('^.*=','')}}
+
+dn: {{openldap_groups_rdn}},{{openldap_suffix}}
+objectClass: organizationalUnit
+ou: {{openldap_groups_rdn |regex_replace('^.*=','')}}
+
+dn: {{openldap_policies_rdn}},{{openldap_suffix}}
+objectClass: organizationalUnit
+ou: {{openldap_policies_rdn |regex_replace('^.*=','')}}
+
+dn: {{openldap_default_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
+objectClass: organizationalRole
+objectClass: pwdPolicy
+objectClass: pwdPolicyChecker
+cn: {{openldap_default_policy_rdn |regex_replace('^.*=','')}}
+pwdAttribute: {{openldap_default_policy_password_attribute}}
+pwdLockout: {{'TRUE' if openldap_default_policy_password_lockout else 'FALSE'}}
+pwdLockoutDuration: {{openldap_default_policy_password_lockout_duration}}
+pwdMaxFailure: {{openldap_default_policy_password_max_failure}}
+pwdFailureCountInterval: {{openldap_default_policy_password_failure_count_interval}}
+pwdCheckQuality: {{openldap_default_policy_password_check_quality}}
+pwdMinLength: {{openldap_default_policy_password_min_length}}
+pwdInHistory: {{openldap_default_policy_password_in_history}}
+pwdAllowUserChange: {{'TRUE' if openldap_default_policy_password_allow_user_change else 'FALSE'}}

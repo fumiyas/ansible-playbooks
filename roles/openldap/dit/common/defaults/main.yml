@@ -1,0 +1,1 @@
+ldifunwrap_command: sed -n "1 {h; $ !d}; $ {x; s/\n //g; p}; /^ / {H; d}; /^ /! {x; s/\n /  /g; p}"
