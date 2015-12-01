@@ -21,8 +21,8 @@ Vagrant.configure(2) do |config|
     vbox.customize(['modifyvm', :id, '--natdnsproxy1', 'off'])
   end
 
-  HOSTS_VARS.each do |host|
-    config.vm.define(host['name']) do |node|
+  HOSTS_VARS.each do |name, host|
+    config.vm.define(name) do |node|
       node.vm.box = host['vagrant_box'] || VM_BOX
       node.vm.hostname = host['hostname']
       node.vm.network(
@@ -34,7 +34,7 @@ Vagrant.configure(2) do |config|
       node.vm.synced_folder('.', '/vagrant', disabled: true)
 
       node.vm.provider(:virtualbox) do |vbox|
-	vbox.name = NOW.strftime(VM_NAME_PREFIX) + host['name'] + NOW.strftime(VM_NAME_SUFFIX)
+	vbox.name = NOW.strftime(VM_NAME_PREFIX) + name + NOW.strftime(VM_NAME_SUFFIX)
 	vbox.cpus = host['cpus'] || 1
 	vbox.memory = host['memory'] || 512
       end
