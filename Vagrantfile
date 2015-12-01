@@ -40,6 +40,9 @@ Vagrant.configure(2) do |config|
 	vbox.name = NOW.strftime(VM_NAME_PREFIX) + name + NOW.strftime(VM_NAME_SUFFIX)
 	vbox.cpus = host['cpus'] || 1
 	vbox.memory = host['memory'] || 512
+	2.upto(4) do |n|
+	  vbox.customize(["modifyvm", :id, "--nictype" + n.to_s, "virtio" ])
+	end
       end
     end
   end
