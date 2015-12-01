@@ -1,0 +1,8 @@
+- name: "dnsmasq to reflect hosts definition in $hosts variable"
+  hosts: dnsmasq-hosts
+  roles:
+    - role: dnsmasq/hosts
+  tags:
+    - dnsmasq
+    - dnsmasq-hosts
+
