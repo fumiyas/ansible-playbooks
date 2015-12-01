@@ -44,6 +44,7 @@
     register: ifcfgs
     changed_when: false
 
+  ## FIXME: nmcli con mod {{if}} ipv4.ignore-auto-dns yes
   - name: "PEERDNS=no"
     lineinfile:
       dest={{item}}
@@ -57,6 +58,7 @@
 
   when: ansible_os_family == 'RedHat'
 
+## FIXME: nmcli con mod {{if}} ipv4.dns 127.0.0.1
 - name: "resolv.conf"
   copy:
     src=resolv.conf
