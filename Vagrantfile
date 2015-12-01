@@ -12,6 +12,7 @@ VAGRANT_NETWORK = VAGRANT_VARS['network']
 VM_NAME_PREFIX = VAGRANT_VARS['vm']['name_prefix'] || Pathname.new(Dir.pwd).split[-1] + '_'
 VM_NAME_SUFFIX = VAGRANT_VARS['vm']['name_suffix'] || ".%Y%m%d.%H%M%S.#{Process.pid}"
 VM_BOX = VAGRANT_VARS['vm']['box']
+VM_NETWORKS = VAGRANT_VARS['vm']['networks'] || {'name' => 'vagrant'}
 
 HOSTS_VARS = YAML.load_file('staging/group_vars/all/hosts.yml')['hosts']
 
@@ -25,10 +26,12 @@ Vagrant.configure(2) do |config|
     config.vm.define(name) do |node|
       node.vm.box = host['vagrant_box'] || VM_BOX
       node.vm.hostname = host['hostname']
+      ## FIXME: Multiple network support
       node.vm.network(
 	:private_network,
-	ip:host['ips'][0]['address'],
-	netmask:host['ips'][0]['netmask'] || '255.255.255.0'
+	virtualbox__intnet:host['networks'][0]['name'] || VM_NETWORKS[0]['name'],
+	ip:host['networks'][0]['address'],
+	netmask:host['networks'][0]['netmask'] || '255.255.255.0'
       )
 
       node.vm.synced_folder('.', '/vagrant', disabled: true)

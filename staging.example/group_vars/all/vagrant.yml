@@ -2,5 +2,7 @@ vagrant:
   network: 10.255.0.0/24
   vm:
     box: bento/centos-7.1
-    name_prefix: example_
+    name_prefix: example.jp_
+    networks:
+      - name: example.jp
 
