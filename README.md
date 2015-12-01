@@ -6,7 +6,11 @@ My Ansible playbooks
   * URL: <https://GitHub.com/fumiyas/ansible-playbooks>
   * Twitter: <https://twitter.com/satoh_fumiyasu>
 
-NOTE: Ansible 2.0+ required
+Requirements
+----------------------------------------------------------------------
+
+  * Ansible 2.0+
+  * Vagrant (for staging environment, tested on Vagrant 1.7.4)
 
 How to use
 ----------------------------------------------------------------------
@@ -21,6 +25,8 @@ Customize hosts definition and inventory files:
 
 ```console
 $ vi staging/group_vars/all/hosts.yml
+...
+$ vi staging/host_vars/*/*.yml
 ...
 $ vi staging/inventory.ini
 ...
@@ -44,6 +50,21 @@ Login to the OS in the VM via SSH through Vagrant:
 
 ```console
 $ vagrant ssh ldap-master1
+$ vagrant ssh ldap-master2
+$ vagrant ssh ldap-slave1
+```
+
+Discard VMs:
+
+```console
+$ make destroy
 ...
 ```
+
+TODO
+----------------------------------------------------------------------
+
+  * Add more roles
+  * Support Deiban and Ubuntu
+  * Support other VM softwares (e.g., KVM, VMware)
 
