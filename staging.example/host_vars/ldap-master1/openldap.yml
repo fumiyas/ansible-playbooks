@@ -1,0 +1,8 @@
+openldap_master_id: 1
+
+openldap_slave_masters:
+  - uri: ldap://ldap-master2.example.jp/
+
+openldap_dit_provisioning:
+  - base
+
