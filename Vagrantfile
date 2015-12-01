@@ -28,7 +28,7 @@ Vagrant.configure(2) do |config|
       node.vm.network(
 	:private_network,
 	ip:host['ips'][0]['address'],
-	netmask:host['ips'][0]['address'] || '255.255.255.0'
+	netmask:host['ips'][0]['netmask'] || '255.255.255.0'
       )
 
       node.vm.synced_folder('.', '/vagrant', disabled: true)
