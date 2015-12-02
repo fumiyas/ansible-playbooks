@@ -2,7 +2,7 @@
 
 dnsmasq_resolv_conf="/etc/dnsmasq.resolv.conf"
 
-inet_aton() {
+_dnsmasq_inet_aton() {
   local n ip_uint32=0
 
   for n in ${1//./ }; do
@@ -12,11 +12,14 @@ inet_aton() {
 }
 
 dnsmasq_config() {
-  : >"$dnsmasq_resolv_conf.$$.tmp"
+  local server
+  local resolv_conf_tmp="$dnsmasq_resolv_conf.$$.tmp"
+
+  : >"$resolv_conf_tmp"
   for server in ${new_domain_name_servers-}; do
-    echo "nameserver $server" >>"$dnsmasq_resolv_conf.$$.tmp"
+    echo "nameserver $server" >>"$resolv_conf_tmp"
   done
-  mv "$dnsmasq_resolv_conf.$$.tmp" "$dnsmasq_resolv_conf"
+  mv "$resolv_conf_tmp" "$dnsmasq_resolv_conf"
 
   if type dbus-send >/dev/null 2>&1; then
     local dnsmasq_servers
@@ -24,7 +27,7 @@ dnsmasq_config() {
     dnsmasq_servers=$(
       for server in $new_domain_name_servers; do
 	echo -n uint32:
-	inet_aton "$server"
+	_dnsmasq_inet_aton "$server"
       done
     )
 
