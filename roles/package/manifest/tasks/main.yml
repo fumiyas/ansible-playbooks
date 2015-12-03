@@ -1,2 +1,7 @@
-- include: roles/package/manifest/tasks/{{ansible_pkg_mgr}}.yml
+- name: "Vendor Package repository"
+  include: roles/vendor/{{package_vendor}}/package/tasks/{{ansible_pkg_mgr}}.yml
+  when: package_vendor is defined
+
+- name: "Package manifest order"
+  include: roles/package/manifest/tasks/{{ansible_pkg_mgr}}.yml
 

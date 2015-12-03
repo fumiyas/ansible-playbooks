@@ -1,6 +1,8 @@
-- include: roles/package/manifest/tasks/main.yml
+- name: "Package manifest"
+  include: roles/package/manifest/tasks/main.yml
   vars:
     package_manifest: "{{openldap_server_package_manifest}}"
+    package_vendor: "{{openldap_vendor if openldap_vendor is defined else none}}"
 
 - name: "slapd.conf"
   template:
