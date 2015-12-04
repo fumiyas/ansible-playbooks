@@ -1,4 +1,6 @@
-openldap_server_ports:
+openldap_vendor: os
+
+openldap_server_port_manifest:
   - protocol: tcp
     port: 389
   - protocol: tcp

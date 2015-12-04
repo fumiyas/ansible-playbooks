@@ -1,0 +1,16 @@
+- name: "OS, distribution, version, vendor specific package variables"
+  include_vars: "{{item}}"
+  with_first_found:
+    - "roles/vendor/{{package_vendor}}/{{package_name}}/vars/{{ansible_distribution |lower}}-{{ansible_distribution_version}}.yml"
+    - "roles/vendor/{{package_vendor}}/{{package_name}}/vars/{{ansible_distribution |lower}}-{{ansible_distribution_version |int}}.yml"
+    - "roles/vendor/{{package_vendor}}/{{package_name}}/vars/{{ansible_distribution |lower}}.yml"
+    - "roles/vendor/{{package_vendor}}/{{package_name}}/vars/{{ansible_os_family |lower}}-{{ansible_distribution_version}}.yml"
+    - "roles/vendor/{{package_vendor}}/{{package_name}}/vars/{{ansible_os_family |lower}}-{{ansible_distribution_version |int}}.yml"
+    - "roles/vendor/{{package_vendor}}/{{package_name}}/vars/{{ansible_os_family |lower}}.yml"
+    - "vars/{{ansible_distribution |lower}}-{{ansible_distribution_version}}.yml"
+    - "vars/{{ansible_distribution |lower}}-{{ansible_distribution_version |int}}.yml"
+    - "vars/{{ansible_distribution |lower}}.yml"
+    - "vars/{{ansible_os_family |lower}}-{{ansible_distribution_version}}.yml"
+    - "vars/{{ansible_os_family |lower}}-{{ansible_distribution_version |int}}.yml"
+    - "vars/{{ansible_os_family |lower}}.yml"
+
