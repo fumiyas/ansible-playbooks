@@ -48,3 +48,17 @@ openldap_default_policy_password_check_quality: 0
 openldap_default_policy_password_in_history: 0
 openldap_default_policy_password_min_length: 0
 
+openldap_test_users_rdn: ou=test
+openldap_test_users_number: 1000
+openldap_test_users_name_format: "u%04d"
+openldap_test_users_password_format: "%04d"
+openldap_test_users_uid_base: 100000
+openldap_test_users_gid: 100
+openldap_test_users_home_base: /home
+
+openldap_test_groups_rdn: ou=test
+openldap_test_groups_number: 10
+openldap_test_groups_name_format: "g%04d"
+openldap_test_groups_gid_base: 100000
+
+

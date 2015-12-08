@@ -11,6 +11,8 @@
   hosts: openldap-dit
   roles:
     - openldap/dit/base
+    - role: openldap/dit/test
+      when: inventory == 'staging'
   tags:
     - openldap
     - openldap-dit

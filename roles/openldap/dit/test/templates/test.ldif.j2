@@ -1,0 +1,28 @@
+dn: {{openldap_test_users_rdn}},{{openldap_users_rdn}},{{openldap_suffix}}
+objectClass: organizationalUnit
+ou: {{openldap_test_users_rdn |regex_replace('^.*=','')}}
+
+{% for n in range(openldap_test_users_number) %}
+dn: uid={{openldap_test_users_name_format |format(n)}},{{openldap_test_users_rdn}},{{openldap_users_rdn}},{{openldap_suffix}}
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uid: {{openldap_test_users_name_format |format(n)}}
+cn: {{openldap_test_users_name_format |format(n)}}
+sn: {{openldap_test_users_name_format |format(n)}}
+userPassword: {{openldap_test_users_password_format |format(n)}}
+uidNumber: {{n + openldap_test_users_uid_base}}
+gidNumber: {{openldap_test_users_gid}}
+homeDirectory: {{openldap_test_users_home_base}}/{{openldap_test_users_name_format |format(n)}}
+
+{% endfor %}
+dn: {{openldap_test_groups_rdn}},{{openldap_groups_rdn}},{{openldap_suffix}}
+objectClass: organizationalUnit
+ou: {{openldap_test_groups_rdn |regex_replace('^.*=','')}}
+
+{% for n in range(openldap_test_groups_number) %}
+dn: cn={{openldap_test_groups_name_format |format(n)}},{{openldap_test_groups_rdn}},{{openldap_groups_rdn}},{{openldap_suffix}}
+objectClass: posixGroup
+cn: {{openldap_test_groups_name_format |format(n)}}
+gidNumber: {{n + openldap_test_groups_gid_base}}
+
+{% endfor %}
