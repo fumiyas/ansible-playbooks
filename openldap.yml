@@ -7,6 +7,14 @@
     - openldap-client
     - openldap-server
 
+- name: "OpenLDAP DIT"
+  hosts: openldap-dit
+  roles:
+    - openldap/dit/base
+  tags:
+    - openldap
+    - openldap-dit
+
 - name: "OpenLDAP client"
   hosts: openldap-client
   roles:
