@@ -25,6 +25,8 @@ openldap_schemas:
   - inetorgperson
   - ppolicy
 
+openldap_schema_files:
+
 openldap_master_rdn: cn=master
 openldap_master_password: "{DISABLED}PASSWORD"
 openldap_slave_rdn: cn=slave
