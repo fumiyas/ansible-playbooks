@@ -116,7 +116,7 @@ sub entry {
   my $buf = "";
   my $e = "";
   while ( <$in> ) {
-    next if ( !( $_ =~ /^#/ ));
+    next if ( $_ =~ /^#/ );
 
     if ( $_ eq "\n" ) {
       goto BREAK if !($_ eq "");
