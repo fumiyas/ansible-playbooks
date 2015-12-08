@@ -30,6 +30,7 @@
     mode=0644
     backup=true
   become: true
+  when: openldap_server_default_file is not none
   notify: slapd reload
 
 - name: "Schema files"
