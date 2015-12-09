@@ -87,7 +87,7 @@
         system("sed -n \\"/^"dn"/,/^$/ { /^userPassword:/p }\\" base.ldif")
       }' \
       {{openldap_dirs_sysconf}}/base.diff.ldif \
-    {{openldap_dirs_bin}}/ldapmodify \
+    |{{openldap_dirs_bin}}/ldapmodify \
       -H ldapi:/// \
       -QY external \
     ;
