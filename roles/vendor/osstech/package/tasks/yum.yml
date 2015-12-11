@@ -1,7 +1,7 @@
 - name: "Yum: OSSTech-DevOps.repo"
-  copy:
-    src=roles/vendor/osstech/package/files/OSSTech-DevOps.repo
-    dest=/etc/yum.repos.d/
+  template:
+    src=roles/vendor/osstech/package/templates/OSSTech-DevOps.repo.j2
+    dest=/etc/yum.repos.d/OSSTech-DevOps.repo
     backup=yes
   become: true
 

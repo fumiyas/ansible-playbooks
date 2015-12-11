@@ -1,5 +1,0 @@
-[osstech-devops]
-name=OSSTech Software Products for DevOps
-baseurl=https://FIXME.osstech.co.jp/product/RHEL$releasever/$basearch/RPMS/
-enabled=0
-gpgcheck=0

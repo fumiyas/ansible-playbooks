@@ -1,3 +1,4 @@
 /.vagrant
+/*/ssh_config
 /staging
-/staging.example/ssh_config
+vault.yml

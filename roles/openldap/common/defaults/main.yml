@@ -13,7 +13,14 @@ openldap_server_options:
 openldap_server_db_backend: bdb
 openldap_server_bdb_cache_size: 64
 
-openldap_master_id: -1
+openldap_tls_src_directory:
+openldap_tls_ca_certificate_file_name:
+openldap_tls_certificate_file_name:
+openldap_tls_key_file_name:
+
+openldap_master_id:
+
+openldap_update_referral_uri:
 
 openldap_password_hash_name: CRYPT
 openldap_password_crypt_salt_format: "$5$%.16s"
@@ -27,10 +34,17 @@ openldap_schemas:
 
 openldap_schema_files:
 
+openldap_attribute_options:
+  - lang-
+  - phonetic
+
 openldap_master_rdn: cn=master
 openldap_master_password: "{DISABLED}PASSWORD"
+
 openldap_slave_rdn: cn=slave
 openldap_slave_password: "{DISABLED}PASSWORD"
+openldap_slave_masters:
+
 openldap_admin_rdn: cn=admin
 openldap_admin_password: "{DISABLED}PASSWORD"
 

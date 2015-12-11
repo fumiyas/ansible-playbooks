@@ -6,7 +6,8 @@ BASE {{openldap_suffix}}
 TLS_REQCERT hard
 TLS_PROTOCOL_MIN 3.1
 TLS_CIPHER_SUITE ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
-{% if openldap_tls_ca_certificate is defined %}
-TLS_CACERT {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate}}.crt
+
+{% if openldap_tls_ca_certificate_file_name is not none %}
+TLS_CACERT {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate_file_name}}
 {% endif %}
 

@@ -14,3 +14,22 @@
     backup=true
   become: true
 
+- name: "TLS certificate directory"
+  file:
+    path={{openldap_dirs_sysconf}}/certs
+    state=directory
+    mode=0755
+    owner=root
+    group=root
+  become: true
+
+- name: "TLS CA certificate file"
+  copy:
+    src={{openldap_tls_src_directory}}/{{openldap_tls_ca_certificate_file_name}}
+    dest={{openldap_dirs_sysconf}}/certs/
+    mode=0444
+    owner=root
+    group=root
+  become: true
+  when: openldap_tls_src_directory is not none and openldap_tls_ca_certificate_file_name is not none
+

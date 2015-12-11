@@ -26,22 +26,25 @@ tool-threads 4
 timelimit 30
 sizelimit unlimited
 
-{% if openldap_tls_ca_certificate_file is defined %}
-TLSCACertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate_file}}
-{% endif %}
-{% if openldap_tls_certificate_file is defined %}
-TLSCertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_certificate_file}}
-TLSCertificateKeyFile {{openldap_dirs_sysconf}}/private/{{openldap_tls_key_file}}
-{% endif %}
 TLSProtocolMin 3.1
 TLSCipherSuite ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
+{% if openldap_tls_ca_certificate_file_name not none %}
+TLSCACertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate_file_name}}
+{% endif %}
+{% if openldap_tls_certificate_file_name is not none %}
+TLSCertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_certificate_file_name}}
+TLSCertificateKeyFile {{openldap_dirs_sysconf}}/private/{{openldap_tls_key_file_name}}
+{% endif %}
 
 password-hash {{'{'}}{{openldap_password_hash_name}}{{'}'}}
-{% if openldap_password_crypt_salt_format is defined %}
+{% if openldap_password_crypt_salt_format is none %}
 password-crypt-salt-format "{{openldap_password_crypt_salt_format}}"
 {% endif %}
 
-attributeoptions lang- phonetic
+{% if openldap_attribute_options is not none %}
+attributeoptions {{openldap_attribute_options |join(' ')}}
+
+{% endif %}
 
 ## Access control for Root DSE
 ## ----------------------------------------------------------------------
@@ -49,7 +52,7 @@ attributeoptions lang- phonetic
 access to dn.subtree=""
 	by * read
 
-{% if openldap_update_referral_uri is defined %}
+{% if openldap_update_referral_uri is not none %}
 ## Automatic referral chasing
 ## ======================================================================
 
@@ -170,7 +173,7 @@ access to *
 ## Master (provider)
 ## ----------------------------------------------------------------------
 
-{% if openldap_master_id is defined and openldap_master_id > 0 %}
+{% if openldap_master_id is not none %}
 serverID {{openldap_master_id}}
 
 {% endif %}
@@ -179,7 +182,7 @@ overlay syncprov
 syncprov-checkpoint 128 5
 syncprov-sessionlog 128
 
-{% if openldap_slave_masters is defined %}
+{% if openldap_slave_masters is not none %}
 ## Slave (consumer)
 ## ----------------------------------------------------------------------
 
@@ -197,11 +200,11 @@ syncrepl rid={{'%03d' |format(loop.index)}}
 	credentials="{{openldap_slave_password}}"
 
 {% endfor %}
-{% if openldap_master_id is defined and openldap_master_id > 0 %}
+{% if openldap_master_id is not none %}
 mirrormode on
 
 {% endif %}
-{% if openldap_update_referral_uri is defined %}
+{% if openldap_update_referral_uri is not none %}
 updateref {{openldap_update_referral_uri}}
 
 {% endif %}
@@ -214,7 +217,7 @@ overlay ppolicy
 ppolicy_default "{{openldap_default_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}"
 ppolicy_use_lockout		on
 ppolicy_hash_cleartext		on
-{% if openldap_update_referral_uri is defined %}
+{% if openldap_update_referral_uri is not none %}
 ppolicy_forward_updates		on
 {% endif %}
 

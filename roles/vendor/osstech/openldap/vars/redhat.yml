@@ -6,7 +6,7 @@ openldap_client_package_manifest:
     enablerepo: osstech-devops
 
 openldap_server_service_name: osstech-ldap
-openldap_server_default_file: /opt/osstech/etc/sysconfig/slapd
+openldap_server_default_file:
 
 openldap_dirs_sysconf: /opt/osstech/etc/openldap
 openldap_dirs_bin: /opt/osstech/bin
