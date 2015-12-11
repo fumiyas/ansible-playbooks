@@ -1,5 +1,5 @@
-{% if ldap_client_server_uris is defined %}
-URI {{ldap_client_server_uris |join(' ')}}
+{% if openldap_client_server_uris is not none %}
+URI {{openldap_client_server_uris |join(' ')}}
 {% endif %}
 BASE {{openldap_suffix}}
 

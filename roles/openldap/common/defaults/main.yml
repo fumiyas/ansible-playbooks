@@ -1,5 +1,9 @@
 openldap_vendor: os
 
+openldap_client_server_uris:
+#  - ldap://ldap1.example.jp/
+#  - ldap://ldap2.example.jp/
+
 openldap_server_port_manifest:
   - protocol: tcp
     port: 389
@@ -33,6 +37,8 @@ openldap_schemas:
   - ppolicy
 
 openldap_schema_files:
+#  - site.schema
+#  - extra.schema
 
 openldap_attribute_options:
   - lang-

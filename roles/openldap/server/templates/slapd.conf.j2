@@ -28,7 +28,7 @@ sizelimit unlimited
 
 TLSProtocolMin 3.1
 TLSCipherSuite ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
-{% if openldap_tls_ca_certificate_file_name not none %}
+{% if openldap_tls_ca_certificate_file_name is not none %}
 TLSCACertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate_file_name}}
 {% endif %}
 {% if openldap_tls_certificate_file_name is not none %}
@@ -37,7 +37,7 @@ TLSCertificateKeyFile {{openldap_dirs_sysconf}}/private/{{openldap_tls_key_file_
 {% endif %}
 
 password-hash {{'{'}}{{openldap_password_hash_name}}{{'}'}}
-{% if openldap_password_crypt_salt_format is none %}
+{% if openldap_password_crypt_salt_format is not none %}
 password-crypt-salt-format "{{openldap_password_crypt_salt_format}}"
 {% endif %}
 

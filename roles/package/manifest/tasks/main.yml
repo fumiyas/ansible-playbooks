@@ -1,8 +1,8 @@
 - name: "Vendor Package repository"
   include: roles/vendor/{{package_vendor}}/package/tasks/{{ansible_pkg_mgr}}.yml
-  when: package_vendor is defined and package_vendor != "os"
+  when: package_vendor is defined and package_vendor not in [none, 'os']
 
 - name: "Package manifest order"
   include: roles/package/manifest/tasks/{{ansible_pkg_mgr}}.yml
-  when: package_manifest is defined
+  when: package_manifest is not none
 

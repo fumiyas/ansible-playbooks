@@ -9,7 +9,7 @@ objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: {{openldap_master_rdn |regex_replace('^.*=','')}}
 description: LDAP master process (rootdn)
-{% if openldap_master_password is defined %}
+{% if openldap_master_password is not none %}
 userPassword: {{openldap_master_password}}
 {% else %}
 userPassword: {{'{DISABLED}PASSWORD'}}
@@ -21,20 +21,20 @@ objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: {{openldap_slave_rdn |regex_replace('^.*=','')}}
 description: LDAP slave process (replication)
-{% if openldap_slave_password is defined %}
+{% if openldap_slave_password is not none %}
 userPassword: {{openldap_slave_password}}
 {% else %}
 userPassword: {{'{DISABLED}PASSWORD'}}
 {% endif %}
 pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
-{% if openldap_ldapmanager_rdn is defined %}
+{% if openldap_ldapmanager_rdn is not none %}
 
 dn: {{openldap_ldapmanager_rdn}},{{openldap_suffix}}
 objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: {{openldap_ldapmanager_rdn |regex_replace('^.*=','')}}
 description: LDAP Manager process (provisioning)
-{% if openldap_ldapmanager_password is defined %}
+{% if openldap_ldapmanager_password is not none %}
 userPassword: {{openldap_ldapmanager_password}}
 {% else %}
 userPassword: {{'{DISABLED}PASSWORD'}}
@@ -47,7 +47,7 @@ objectClass: simpleSecurityObject
 objectClass: organizationalRole
 cn: {{openldap_admin_rdn |regex_replace('^.*=','')}}
 description: LDAP administrator (for human)
-{% if openldap_admin_password is defined %}
+{% if openldap_admin_password is not none %}
 userPassword: {{openldap_admin_password}}
 {% else %}
 userPassword: {{'{DISABLED}PASSWORD'}}

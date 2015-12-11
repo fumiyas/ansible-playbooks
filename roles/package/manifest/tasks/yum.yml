@@ -6,5 +6,5 @@
     disablerepo={{ item.disablerepo if item.has_key('disablerepo') else none }}
   with_items: "{{package_manifest}}"
   become: true
-  when: package_manifest is defined
+  when: package_manifest is not none
 
