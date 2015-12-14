@@ -69,6 +69,13 @@
     backup=true
   become: true
 
+- name: "dnsmasq.resolv.conf"
+  stat:
+    path=/etc/dnsmasq.resolv.conf
+  register: resolv_dnsmasq_conf
+  changed_when: not resolv_dnsmasq_conf.stat.exists
+  notify: network reload
+
 - name: "dnsmasq service"
   service:
     name={{item}}
