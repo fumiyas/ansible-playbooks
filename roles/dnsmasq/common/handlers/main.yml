@@ -1,8 +1,7 @@
 - name: "dnsmasq reload"
-  ## reload not supported
   service:
     name=dnsmasq
-    state=restarted
+    state=reloaded
   become: true
 
 ## FIXME: RHEL and Debian specific
