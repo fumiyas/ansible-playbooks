@@ -4,7 +4,7 @@
 openldap_suffix: dc=example,dc=com
 openldap_organization: "Example Corp."
 
-openldap_master_password: master-pass
-openldap_slave_password: slave-pass
-openldap_admin_password: admin-pass
+openldap_master_password: FIXME-master-pass
+openldap_slave_password: FIXME-slave-pass
+openldap_admin_password: FIXME-admin-pass
 
