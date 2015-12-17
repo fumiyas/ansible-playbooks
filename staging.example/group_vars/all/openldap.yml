@@ -1,7 +1,7 @@
 ## To customize parameters, copy parameter definitions to this file from
 ## roles/openldap/common/defaults/main.yml and change the its values.
 
-openldap_suffix: dc=example,dc=jp
+openldap_suffix: dc=example,dc=com
 openldap_organization: "Example Corp."
 
 openldap_master_password: master-pass

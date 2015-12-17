@@ -1,8 +1,8 @@
 openldap_vendor: os
 
 openldap_client_server_uris:
-#  - ldap://ldap1.example.jp/
-#  - ldap://ldap2.example.jp/
+#  - ldap://ldap1.example.com/
+#  - ldap://ldap2.example.com/
 
 openldap_server_port_manifest:
   - protocol: tcp
