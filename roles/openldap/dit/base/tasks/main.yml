@@ -84,7 +84,7 @@
       {print}
       /^dn:/ {dn=$0}
       /^changetype: add$/ {
-        system("sed -n \\"/^"dn"/,/^$/ { /^userPassword:/p }\\" base.ldif")
+        system("sed -n \\"/^"dn"/,/^$/ { /^userPassword:/p }\\" {{openldap_dirs_sysconf}}/base.ldif")
       }' \
       {{openldap_dirs_sysconf}}/base.diff.ldif \
     |{{openldap_dirs_bin}}/ldapmodify \
