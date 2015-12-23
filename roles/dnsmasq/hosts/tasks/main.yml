@@ -85,3 +85,5 @@
     - dnsmasq
   become: true
 
+- meta: flush_handlers
+
