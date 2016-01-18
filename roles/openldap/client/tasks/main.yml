@@ -25,11 +25,11 @@
 
 - name: "TLS CA certificate file"
   copy:
-    src={{openldap_tls_src_directory}}/{{openldap_tls_ca_certificate_file_name}}
+    src={{openldap_tls_src_dir}}/{{openldap_tls_ca_certificate_file_name}}
     dest={{openldap_sysconf_dir}}/certs/
     mode=0444
     owner=root
     group=root
   become: true
-  when: openldap_tls_src_directory is not none and openldap_tls_ca_certificate_file_name is not none
+  when: openldap_tls_src_dir is not none and openldap_tls_ca_certificate_file_name is not none
 

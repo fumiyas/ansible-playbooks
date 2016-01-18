@@ -17,7 +17,7 @@ openldap_server_options:
 openldap_server_db_backend: bdb
 openldap_server_bdb_cache_size: 64
 
-openldap_tls_src_directory:
+openldap_tls_src_dir:
 openldap_tls_ca_certificate_file_name:
 openldap_tls_certificate_file_name:
 openldap_tls_key_file_name:
