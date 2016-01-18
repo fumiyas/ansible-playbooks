@@ -9,7 +9,7 @@
     src=slapd.conf.j2
     dest={{openldap_sysconf_dir}}/slapd.conf
     owner=root
-    group=ldap
+    group={{openldap_server_group}}
     mode=0640
     backup=true
   become: true
@@ -59,7 +59,7 @@
     - path: "{{openldap_sysconf_dir}}/private"
       mode: 0750
       owner: root
-      group: ldap
+      group: "{{openldap_server_group}}"
   become: true
 
 - name: "TLS CA certificate file"
@@ -90,7 +90,7 @@
     dest={{openldap_sysconf_dir}}/private/
     mode=0440
     owner=root
-    group=ldap
+    group={{openldap_server_group}}
   become: true
   when: openldap_tls_src_dir is not none and openldap_tls_key_file_name is not none
   notify: slapd reload
@@ -99,8 +99,8 @@
   file:
     path={{openldap_db_dir}}
     state=directory
-    owner=ldap
-    group=ldap
+    owner={{openldap_server_user}}
+    group={{openldap_server_group}}
     mode=700
   become: true
   register: db_dir

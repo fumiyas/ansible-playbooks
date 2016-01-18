@@ -3,7 +3,7 @@
     src=test.ldif.j2
     dest={{openldap_sysconf_dir}}/test.ldif
     owner=root
-    group=ldap
+    group={{openldap_server_group}}
     mode=0640
     backup=true
   become: true
