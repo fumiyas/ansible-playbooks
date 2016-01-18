@@ -1,7 +1,8 @@
 - name: "Debian packages (apt)"
   apt:
-    name={{item}}
+    name={{item.name}}
     state=present
-  with_items: "{{debian_packages}}"
+  with_items: "{{package_manifest}}"
   become: true
+  when: package_manifest is not none
 
