@@ -5,7 +5,7 @@
 - name: "dnsmasq.conf"
   copy:
     src=dnsmasq.conf
-    dest=/etc/dnsmasq.conf
+    dest={{dnsmasq_sysconf_dir}}/dnsmasq.conf
     mode=0755
     owner=root
     group=root
@@ -16,7 +16,7 @@
 - name: "dnsmasq.hosts"
   template:
     src=dnsmasq.hosts.j2
-    dest=/etc/dnsmasq.hosts
+    dest={{dnsmasq_sysconf_dir}}/dnsmasq.hosts
     mode=0755
     owner=root
     group=root
@@ -24,39 +24,16 @@
   become: true
   notify: dnsmasq reload
 
-## FIXME: RHEL specific
-- block:
-
-  - name: "dhclient.d/dnsmasq.sh"
-    copy:
-      src=dhclient-dnsmasq.sh
-      dest=/etc/dhcp/dhclient.d/dnsmasq.sh
-      mode=0755
-      owner=root
-      group=root
-      backup=true
-    become: true
-    notify: network reload
-
-  - name: "/etc/sysconfig/network-scripts/ifcfg-* list"
-    shell: |
-      ls /etc/sysconfig/network-scripts/ifcfg-* |fgrep -v .
-    register: ifcfgs
-    changed_when: false
-
-  ## FIXME: nmcli con mod {{if}} ipv4.ignore-auto-dns yes
-  - name: "PEERDNS=no"
-    lineinfile:
-      dest={{item}}
-      state=present
-      regexp='^PEERDNS='
-      line='PEERDNS=no'
-      backup=true
-    with_items: "{{ifcfgs.stdout_lines}}"
-    become: true
-    notify: network reload
-
-  when: ansible_os_family == 'RedHat'
+- name: "OS, distribution, version specific tasks"
+  include: "{{item}}"
+  with_first_found:
+    - files:
+        - "{{ansible_distribution |lower}}-{{ansible_distribution_version}}.yml"
+        - "{{ansible_distribution |lower}}-{{ansible_distribution_version |int}}.yml"
+        - "{{ansible_distribution |lower}}.yml"
+        - "{{ansible_os_family |lower}}-{{ansible_distribution_version}}.yml"
+        - "{{ansible_os_family |lower}}-{{ansible_distribution_version |int}}.yml"
+        - "{{ansible_os_family |lower}}.yml"
 
 ## FIXME: nmcli con mod {{if}} ipv4.dns 127.0.0.1
 - name: "resolv.conf"
@@ -71,7 +48,7 @@
 
 - name: "dnsmasq.resolv.conf"
   stat:
-    path=/etc/dnsmasq.resolv.conf
+    path={{dnsmasq_sysconf_dir}}/dnsmasq.resolv.conf
   register: resolv_dnsmasq_conf
   changed_when: not resolv_dnsmasq_conf.stat.exists
   notify: network reload

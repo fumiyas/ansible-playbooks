@@ -1,0 +1,21 @@
+- name: "default/dnsmasq"
+  copy:
+    src=debian/dnsmasq.default
+    dest={{dnsmasq_sysconf_dir}}/default/dnsmasq
+    mode=0755
+    owner=root
+    group=root
+    backup=true
+  become: true
+  notify: dnsmasq restart
+
+- name: "dhclient-enter-hooks.d/dnsmasq"
+  copy:
+    src=dhclient-dnsmasq-enter.sh
+    dest=/etc/dhcp/dhclient-enter-hooks.d/dnsmasq
+    mode=0644
+    owner=root
+    group=root
+  become: true
+  notify: network reload
+

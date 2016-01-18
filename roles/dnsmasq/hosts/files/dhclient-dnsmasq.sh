@@ -1,4 +1,7 @@
 #!/bin/bash
+##
+## Hook script for ISC dhclient(8) on Red Hat Enterprise Linux
+##
 
 dnsmasq_resolv_conf="/etc/dnsmasq.resolv.conf"
 

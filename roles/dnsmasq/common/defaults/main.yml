@@ -1,3 +1,6 @@
-dnsmasq_package_manifest:
-  - name: dnsmasq
+## dnsmasq: 全ホスト共通のデフォルト設定
+##
+## カスタマイズにこのファイルは編集しないこと。
+
+dnsmasq_vendor: os
 

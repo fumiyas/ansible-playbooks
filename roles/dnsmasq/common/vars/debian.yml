@@ -1,0 +1,8 @@
+dnsmasq_package_manifest:
+  - name: dnsmasq
+
+dnsmasq_service_name: dnsmasq
+
+dnsmasq_sysconf_dir: /etc
+dnsmasq_sbin_dir: /usr/sbin
+

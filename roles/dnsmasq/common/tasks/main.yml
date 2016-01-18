@@ -1,0 +1,6 @@
+- name: "Package variables"
+  include: roles/package/variables/tasks/main.yml
+  vars:
+    package_name: dnsmasq
+    package_vendor: "{{dnsmasq_vendor}}"
+
