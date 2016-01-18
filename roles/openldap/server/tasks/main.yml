@@ -7,7 +7,7 @@
 - name: "slapd.conf"
   template:
     src=slapd.conf.j2
-    dest={{openldap_dirs_sysconf}}/slapd.conf
+    dest={{openldap_sysconf_dir}}/slapd.conf
     owner=root
     group=ldap
     mode=0640
@@ -17,7 +17,7 @@
 
 - name: "slapd.d (remove to disable slapd-config(5))"
   file:
-    path={{openldap_dirs_sysconf}}/slapd.d
+    path={{openldap_sysconf_dir}}/slapd.d
     state=absent
   become: true
 
@@ -36,7 +36,7 @@
 - name: "Schema files"
   copy:
     src={{item}}
-    dest={{openldap_dirs_sysconf}}/schema/
+    dest={{openldap_sysconf_dir}}/schema/
     mode=0644
     owner=root
     group=root
@@ -52,11 +52,11 @@
     owner={{item.owner}}
     group={{item.group}}
   with_items:
-    - path: "{{openldap_dirs_sysconf}}/certs"
+    - path: "{{openldap_sysconf_dir}}/certs"
       mode: 0755
       owner: root
       group: root
-    - path: "{{openldap_dirs_sysconf}}/private"
+    - path: "{{openldap_sysconf_dir}}/private"
       mode: 0750
       owner: root
       group: ldap
@@ -65,7 +65,7 @@
 - name: "TLS CA certificate file"
   copy:
     src={{openldap_tls_src_directory}}/{{openldap_tls_ca_certificate_file_name}}
-    dest={{openldap_dirs_sysconf}}/certs/
+    dest={{openldap_sysconf_dir}}/certs/
     mode=0444
     owner=root
     group=root
@@ -76,7 +76,7 @@
 - name: "TLS certificate file"
   copy:
     src={{openldap_tls_src_directory}}/{{openldap_tls_certificate_file_name}}
-    dest={{openldap_dirs_sysconf}}/certs/
+    dest={{openldap_sysconf_dir}}/certs/
     mode=0444
     owner=root
     group=root
@@ -87,7 +87,7 @@
 - name: "TLS key file"
   copy:
     src={{openldap_tls_src_directory}}/{{openldap_tls_key_file_name}}
-    dest={{openldap_dirs_sysconf}}/private/
+    dest={{openldap_sysconf_dir}}/private/
     mode=0440
     owner=root
     group=ldap
@@ -97,7 +97,7 @@
 
 - name: "DB directry"
   file:
-    path={{openldap_dirs_db}}
+    path={{openldap_db_dir}}
     state=directory
     owner=ldap
     group=ldap
@@ -108,7 +108,7 @@
 - name: "SELinux security context on DB directry"
   shell: |
     type /sbin/restorecon >/dev/null 2>&1 || exit 0
-    /sbin/restorecon "{{openldap_dirs_db}}"
+    /sbin/restorecon "{{openldap_db_dir}}"
   when: db_dir.changed
 
 - name: "slapd service"

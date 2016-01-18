@@ -4,7 +4,7 @@
 ## ======================================================================
 
 {% for schema in openldap_schemas %}
-include {{openldap_dirs_sysconf}}/schema/{{schema}}.schema
+include {{openldap_sysconf_dir}}/schema/{{schema}}.schema
 {% endfor %}
 
 ## Dynamically loadable module
@@ -16,8 +16,8 @@ moduleload ppolicy
 ## Global configuration
 ## ======================================================================
 
-pidfile {{openldap_dirs_run}}/slapd.pid
-argsfile {{openldap_dirs_run}}/slapd.args
+pidfile {{openldap_run_dir}}/slapd.pid
+argsfile {{openldap_run_dir}}/slapd.args
 
 loglevel stats
 
@@ -29,11 +29,11 @@ sizelimit unlimited
 TLSProtocolMin 3.1
 TLSCipherSuite ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
 {% if openldap_tls_ca_certificate_file_name is not none %}
-TLSCACertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_ca_certificate_file_name}}
+TLSCACertificateFile {{openldap_sysconf_dir}}/certs/{{openldap_tls_ca_certificate_file_name}}
 {% endif %}
 {% if openldap_tls_certificate_file_name is not none %}
-TLSCertificateFile {{openldap_dirs_sysconf}}/certs/{{openldap_tls_certificate_file_name}}
-TLSCertificateKeyFile {{openldap_dirs_sysconf}}/private/{{openldap_tls_key_file_name}}
+TLSCertificateFile {{openldap_sysconf_dir}}/certs/{{openldap_tls_certificate_file_name}}
+TLSCertificateKeyFile {{openldap_sysconf_dir}}/private/{{openldap_tls_key_file_name}}
 {% endif %}
 
 password-hash {{'{'}}{{openldap_password_hash_name}}{{'}'}}
@@ -72,7 +72,7 @@ chain-idassert-bind
 
 database {{openldap_server_db_backend}}
 suffix "{{openldap_suffix}}"
-directory {{openldap_dirs_db}}
+directory {{openldap_db_dir}}
 
 rootdn "{{openldap_master_rdn}},{{openldap_suffix}}"
 #rootpw {SSHA}xxxx

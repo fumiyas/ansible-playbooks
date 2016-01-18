@@ -1,7 +1,7 @@
 - name: "Base DIT data in LDIF file"
   template:
     src=base.ldif.j2
-    dest={{openldap_dirs_sysconf}}/base.ldif
+    dest={{openldap_sysconf_dir}}/base.ldif
     owner=root
     group=ldap
     mode=0640
@@ -12,8 +12,8 @@
   shell: |
     set -eu
     umask 0077
-    : >{{openldap_dirs_sysconf}}/base.current.ldif
-    : >{{openldap_dirs_sysconf}}/base.diff.ldif
+    : >{{openldap_sysconf_dir}}/base.current.ldif
+    : >{{openldap_sysconf_dir}}/base.diff.ldif
   become: true
   changed_when: false
 
@@ -21,7 +21,7 @@
   shell: |
     set -eu
     ret=0
-    {{openldap_dirs_bin}}/ldapsearch \
+    {{openldap_bin_dir}}/ldapsearch \
       -H ldapi:/// \
       -QY external \
       -b '{{item.base}}' \
@@ -31,7 +31,7 @@
       '(objectClass=*)' \
       '*' \
       pwdPolicySubentry \
-    >>{{openldap_dirs_sysconf}}/base.current.ldif \
+    >>{{openldap_sysconf_dir}}/base.current.ldif \
     || ret=$? \
     ;
     [ "$ret" -eq 0 ] || [ "$ret" -eq 32 ] || exit $ret
@@ -47,16 +47,16 @@
 
 - name: "Check if base.current.ldif has data"
   stat:
-    path={{openldap_dirs_sysconf}}/base.current.ldif
+    path={{openldap_sysconf_dir}}/base.current.ldif
   become: true
   register: base_dit_current
 
 - name: "Base DIT provisioning (full)"
   shell: |
-    {{openldap_dirs_bin}}/ldapadd \
+    {{openldap_bin_dir}}/ldapadd \
       -H ldapi:/// \
       -QY external \
-      -f {{openldap_dirs_sysconf}}/base.ldif \
+      -f {{openldap_sysconf_dir}}/base.ldif \
     ;
   become: true
   when: base_dit_current.stat.size == 0
@@ -65,16 +65,16 @@
   script: |
     files/ldifdiff.pl \
       --exclude-attrs=userPassword \
-      {{openldap_dirs_sysconf}}/base.current.ldif \
-      {{openldap_dirs_sysconf}}/base.ldif \
-    >{{openldap_dirs_sysconf}}/base.diff.ldif
+      {{openldap_sysconf_dir}}/base.current.ldif \
+      {{openldap_sysconf_dir}}/base.ldif \
+    >{{openldap_sysconf_dir}}/base.diff.ldif
   become: true
   when: base_dit_current.stat.size > 0
   changed_when: false
 
 - name: "Check if base.diff.ldif has data"
   stat:
-    path={{openldap_dirs_sysconf}}/base.diff.ldif
+    path={{openldap_sysconf_dir}}/base.diff.ldif
   become: true
   register: base_dit_diff
 
@@ -84,10 +84,10 @@
       {print}
       /^dn:/ {dn=$0}
       /^changetype: add$/ {
-        system("sed -n \\"/^"dn"/,/^$/ { /^userPassword:/p }\\" {{openldap_dirs_sysconf}}/base.ldif")
+        system("sed -n \\"/^"dn"/,/^$/ { /^userPassword:/p }\\" {{openldap_sysconf_dir}}/base.ldif")
       }' \
-      {{openldap_dirs_sysconf}}/base.diff.ldif \
-    |{{openldap_dirs_bin}}/ldapmodify \
+      {{openldap_sysconf_dir}}/base.diff.ldif \
+    |{{openldap_bin_dir}}/ldapmodify \
       -H ldapi:/// \
       -QY external \
     ;

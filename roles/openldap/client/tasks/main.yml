@@ -7,7 +7,7 @@
 - name: "ldap.conf"
   template:
     src=ldap.conf.j2
-    dest={{openldap_dirs_sysconf}}/ldap.conf
+    dest={{openldap_sysconf_dir}}/ldap.conf
     owner=root
     group=root
     mode=0644
@@ -16,7 +16,7 @@
 
 - name: "TLS certificate directory"
   file:
-    path={{openldap_dirs_sysconf}}/certs
+    path={{openldap_sysconf_dir}}/certs
     state=directory
     mode=0755
     owner=root
@@ -26,7 +26,7 @@
 - name: "TLS CA certificate file"
   copy:
     src={{openldap_tls_src_directory}}/{{openldap_tls_ca_certificate_file_name}}
-    dest={{openldap_dirs_sysconf}}/certs/
+    dest={{openldap_sysconf_dir}}/certs/
     mode=0444
     owner=root
     group=root

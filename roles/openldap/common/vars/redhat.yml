@@ -6,9 +6,9 @@ openldap_client_package_manifest:
 openldap_server_service_name: slapd
 openldap_server_default_file: /etc/sysconfig/slapd
 
-openldap_dirs_sysconf: /etc/openldap
-openldap_dirs_bin: /usr/bin
-openldap_dirs_sbin: /usr/sbin
-openldap_dirs_db: /var/lib/ldap
-openldap_dirs_run: /var/run/openldap
+openldap_sysconf_dir: /etc/openldap
+openldap_bin_dir: /usr/bin
+openldap_sbin_dir: /usr/sbin
+openldap_db_dir: /var/lib/ldap
+openldap_run_dir: /var/run/openldap
 
