@@ -27,8 +27,8 @@ userPassword: {{openldap_slave_password}}
 userPassword: {{'{DISABLED}PASSWORD'}}
 {% endif %}
 pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
-{% if openldap_ldapmanager_rdn is not none %}
 
+{% if openldap_ldapmanager_rdn is not none %}
 dn: {{openldap_ldapmanager_rdn}},{{openldap_suffix}}
 objectClass: simpleSecurityObject
 objectClass: organizationalRole
@@ -40,8 +40,8 @@ userPassword: {{openldap_ldapmanager_password}}
 userPassword: {{'{DISABLED}PASSWORD'}}
 {% endif %}
 pwdPolicySubentry: {{openldap_none_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}
-{% endif %}
 
+{% endif %}
 dn: {{openldap_admin_rdn}},{{openldap_suffix}}
 objectClass: simpleSecurityObject
 objectClass: organizationalRole

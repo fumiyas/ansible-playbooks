@@ -54,6 +54,9 @@ openldap_slave_masters:
 openldap_admin_rdn: cn=admin
 openldap_admin_password: "{DISABLED}PASSWORD"
 
+openldap_ldapmanager_rdn:
+openldap_ldapmanager_password: "{DISABLED}PASSWORD"
+
 openldap_users_rdn: ou=Users
 openldap_groups_rdn: ou=Groups
 openldap_policies_rdn: ou=Policies
