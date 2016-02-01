@@ -6,6 +6,7 @@
     owner=root
     group=root
     backup=true
+  become: true
   notify: network reload
 
 - name: "/etc/sysconfig/network-scripts/ifcfg-* list"
