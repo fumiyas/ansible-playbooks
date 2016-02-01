@@ -43,8 +43,13 @@ staging production::
 	ANSIBLE_CONFIG=$@/ansible.cfg \
 	$(ANSIBLE_PLAYBOOK_CMD) -i $@/inventory.ini $(ANSIBLE_PLAYBOOK_YAML)
 
-staging/ssh_config:
-	$(VAGRANT) ssh-config >$@.tmp
+staging/ssh_config: .vagrant/machines/*/*/*
+	: >$@.tmp
+	for host in `$(VAGRANT) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
+	  set -- $(VAGRANT) ssh-config $$host; \
+	  echo "$$*"; \
+	  "$$@" >>$@.tmp || exit 1; \
+	done
 	mv $@.tmp $@
 
 ## VM management
