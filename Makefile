@@ -23,8 +23,6 @@ usage:
 
 clean:
 	rm -f */*.tmp staging/ssh_config
-	[ -L staging ] && rm staging
-	[ -L site.yml ] && rm site.yml
 
 distclean: destroy clean
 
@@ -32,10 +30,6 @@ distclean: destroy clean
 ## ======================================================================
 
 .PHONY: staging production
-
-staging::
-	[ -d staging ] || ln -s staging.example staging
-	[ -f site.yml ] || ln -s site.yml.example site.yml
 
 staging:: staging/ssh_config
 

@@ -19,12 +19,6 @@ Requirements
 How to use
 ----------------------------------------------------------------------
 
-Copy the example inventory and vars files for staging environment:
-
-```console
-$ cp -rp staging.example staging
-```
-
 Customize hosts definition and inventory files:
 
 ```console
