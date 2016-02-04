@@ -93,7 +93,7 @@ monitoring on
 dbconfig set_data_dir .
 dbconfig set_lg_dir .
 ## Cache size (GBytes, Bytes, Number of cache regions)
-dbconfig set_cachesize 0 {{openldap_server_bdb_cache_size * 1024 * 1024}} 1
+dbconfig set_cachesize {{(openldap_server_bdb_cache_size / 1024)|int}} {{(openldap_server_bdb_cache_size % 1024) * 1024 * 1024}} 1
 ## Number of objects that can be locked at the same time.
 dbconfig set_lk_max_objects 5000
 ## Number of locks (both requested and granted)
