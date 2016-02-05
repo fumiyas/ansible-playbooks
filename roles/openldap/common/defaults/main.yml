@@ -26,7 +26,7 @@ openldap_master_id:
 
 openldap_update_referral_uri:
 
-openldap_password_hash_name: CRYPT
+openldap_password_hash_scheme: CRYPT
 openldap_password_crypt_salt_format: "$5$%.16s"
 
 openldap_schemas:

@@ -36,8 +36,8 @@ TLSCertificateFile {{openldap_sysconf_dir}}/certs/{{openldap_tls_certificate_fil
 TLSCertificateKeyFile {{openldap_sysconf_dir}}/private/{{openldap_tls_key_file_name}}
 {% endif %}
 
-password-hash {{'{'}}{{openldap_password_hash_name}}{{'}'}}
-{% if openldap_password_crypt_salt_format is not none %}
+password-hash {{'{' + openldap_password_hash_scheme + '}'}}
+{% if openldap_password_hash_scheme == 'CRYPT' and openldap_password_crypt_salt_format is not none %}
 password-crypt-salt-format "{{openldap_password_crypt_salt_format}}"
 {% endif %}
 
