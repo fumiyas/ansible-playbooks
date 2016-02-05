@@ -27,6 +27,13 @@ tool-threads 4
 timelimit 30
 sizelimit unlimited
 
+{% for feature in openldap_server_allow_features %}
+allow {{feature}}
+{% endfor %}
+{% for feature in openldap_server_disallow_features %}
+disallow {{feature}}
+{% endfor %}
+
 TLSProtocolMin 3.1
 TLSCipherSuite ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
 {% if openldap_tls_ca_certificate_file_name is not none %}

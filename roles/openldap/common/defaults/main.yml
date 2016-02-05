@@ -18,6 +18,12 @@ openldap_server_options:
 openldap_server_modules:
   - syncprov
   - ppolicy
+openldap_server_allow_features: [
+  bind_v2,
+]
+openldap_server_disallow_features: [
+  #bind_anon,
+]
 openldap_server_db_backend: bdb
 openldap_server_bdb_cache_size: 64
 
