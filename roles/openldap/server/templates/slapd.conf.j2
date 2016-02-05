@@ -74,7 +74,29 @@ chain-idassert-bind
 	credentials="{{openldap_slave_password}}"
 
 {% endif %}
-## Database #1: {{openldap_suffix}}
+## Database #0: cn=config (read-only)
+## ======================================================================
+
+database config
+
+access to *
+	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" read
+	by dn="{{openldap_master_rdn}},{{openldap_suffix}}" read
+	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" read
+	by * none
+
+## Database #1: cn=monitor
+## ======================================================================
+
+database monitor
+
+access to *
+	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" read
+	by dn="{{openldap_master_rdn}},{{openldap_suffix}}" read
+	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" read
+	by * none
+
+## Database #2: {{openldap_suffix}}
 ## ======================================================================
 
 database {{openldap_server_db_backend}}
@@ -227,26 +249,4 @@ ppolicy_hash_cleartext		on
 {% if openldap_update_referral_uri is not none %}
 ppolicy_forward_updates		on
 {% endif %}
-
-## Database #2: cn=config (read-only)
-## ======================================================================
-
-database config
-
-access to *
-	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" read
-	by dn="{{openldap_master_rdn}},{{openldap_suffix}}" read
-	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" read
-	by * none
-
-## Database #3: cn=monitor
-## ======================================================================
-
-database monitor
-
-access to *
-	by dn="uidNumber=0+gidNumber=0,cn=peercred,cn=external,cn=auth" read
-	by dn="{{openldap_master_rdn}},{{openldap_suffix}}" read
-	by dn="{{openldap_admin_rdn}},{{openldap_suffix}}" read
-	by * none
 
