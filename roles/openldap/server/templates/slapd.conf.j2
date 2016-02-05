@@ -10,8 +10,9 @@ include {{openldap_sysconf_dir}}/schema/{{schema}}.schema
 ## Dynamically loadable module
 ## ======================================================================
 
-moduleload syncprov
-moduleload ppolicy
+{% for module in openldap_server_modules %}
+moduleload {{module}}
+{% endfor %}
 
 ## Global configuration
 ## ======================================================================
