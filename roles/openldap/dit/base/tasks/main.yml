@@ -28,7 +28,7 @@
       -s '{{item.scope}}' \
       -LLL \
       -o ldif-wrap=no \
-      '(objectClass=*)' \
+      '{{item.filter if item.has_key("filter") else "(objectClass=*)"}}' \
       '*' \
       pwdPolicySubentry \
     >>{{openldap_sysconf_dir}}/base.current.ldif \
@@ -40,8 +40,12 @@
       scope: base
     - base: "{{openldap_suffix}}"
       scope: one
-    - base: "{{openldap_policies_rdn}},{{openldap_suffix}}"
-      scope: one
+      filter: '(cn=*)'
+    - base: "{{openldap_suffix}}"
+      scope: sub
+      filter: '(ou=*)'
+    - base: "{{openldap_default_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}"
+      scope: base
   become: true
   changed_when: false
 
