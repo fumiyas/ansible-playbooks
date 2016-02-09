@@ -1,7 +1,11 @@
 ANSIBLE_PLAYBOOK_PATH=	ansible-playbook
-ANSIBLE_OPTS=		-v
-ANSIBLE_REMOTE_TEMP=	/tmp/.ansible.$$LOGNAME@`hostname`.tmp
 ANSIBLE_PLAYBOOK_YAML=	site.yml
+
+ANSIBLE_OPTS=		-v
+ANSIBLE_STAGING_OPTS=
+ANSIBLE_PRODUCTION_OPTS=--ask-become-pass
+
+ANSIBLE_REMOTE_TEMP=	/tmp/.ansible.$$LOGNAME@`hostname`.tmp
 
 ANSIBLE_PLAYBOOK_CMD=	ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
 			$(ANSIBLE_PLAYBOOK_PATH) $(ANSIBLE_OPTS)
@@ -31,11 +35,19 @@ distclean: destroy clean
 
 .PHONY: staging production
 
-staging:: staging/ssh_config
-
-staging production::
+production::
 	ANSIBLE_CONFIG=$@/ansible.cfg \
-	$(ANSIBLE_PLAYBOOK_CMD) -i $@/inventory.ini $(ANSIBLE_PLAYBOOK_YAML)
+	$(ANSIBLE_PLAYBOOK_CMD) \
+	$(ANSIBLE_PRODUCTION_OPTS) \
+	  -i production/inventory.ini \
+	  $(ANSIBLE_PLAYBOOK_YAML)
+
+staging:: staging/ssh_config
+	ANSIBLE_CONFIG=$@/ansible.cfg \
+	$(ANSIBLE_PLAYBOOK_CMD) \
+	$(ANSIBLE_STAGING_OPTS) \
+	  -i staging/inventory.ini \
+	  $(ANSIBLE_PLAYBOOK_YAML)
 
 staging/ssh_config: .vagrant/machines/*/*/*
 	: >$@.tmp
