@@ -138,19 +138,21 @@ dbconfig set_flags DB_LOG_AUTOREMOVE
 
 index objectClass		eq
 index modifyTimestamp		eq
+
 index ou			eq
 index cn			eq,sub
-index sn			eq
+index sn			eq,sub
+index givenName			eq,sub
+index displayName		eq,sub
+index host			eq,sub
+index mail			eq,sub
 index uid			eq
-index displayName		eq
-index mail			eq
 index uidNumber			eq
 index gidNumber			eq
 index memberUID			eq
 index uniqueMember		eq
 index member    		eq
 
-index host			eq
 index pwdFailureTime		eq
 index pwdAccountLockedTime	eq
 
