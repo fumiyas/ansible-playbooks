@@ -6,9 +6,10 @@ require 'pathname'
 
 Vagrant.configure(2) do |config|
   now = Time.now
+  base_dir = File.dirname(__FILE__)
 
-  vagrant_vars = YAML.load_file('staging/group_vars/all/vagrant.yml')['vagrant']
-  hosts_vars = YAML.load_file('staging/group_vars/all/hosts.yml')['hosts']
+  vagrant_vars = YAML.load_file(base_dir+'/staging/group_vars/all/vagrant.yml')['vagrant']
+  hosts_vars = YAML.load_file(base_dir+'/staging/group_vars/all/hosts.yml')['hosts']
 
   vagrant_network = vagrant_vars['network']
   vm_name_prefix = vagrant_vars['vm']['name_prefix'] || Pathname.new(Dir.pwd).split[-1] + '_'
