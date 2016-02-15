@@ -14,6 +14,10 @@ VAGRANT=		vagrant
 
 ## ======================================================================
 
+-include Makefile.local
+
+## ======================================================================
+
 .PHONY: default usage clean distclean
 
 default: usage
