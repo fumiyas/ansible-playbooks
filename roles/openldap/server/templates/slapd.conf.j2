@@ -35,7 +35,7 @@ disallow {{feature}}
 {% endfor %}
 
 TLSProtocolMin 3.1
-TLSCipherSuite ALL:!SSLv2:!RC4:!MD5:!EXP:!LOW:!aNULL:!eNULL:@STRENGTH
+TLSCipherSuite ALL:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!DES-CBC3-SHA:!KRB5:!PSK:!IDEA:!SEED:!RC4:!MD5:!EXPORT:!LOW:!aNULL:!eNULL
 {% if openldap_tls_ca_certificate_file_name is not none %}
 TLSCACertificateFile {{openldap_sysconf_dir}}/certs/{{openldap_tls_ca_certificate_file_name}}
 {% endif %}
