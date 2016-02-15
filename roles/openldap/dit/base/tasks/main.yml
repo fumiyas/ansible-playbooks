@@ -43,7 +43,7 @@
       filter: '(cn=*)'
     - base: "{{openldap_suffix}}"
       scope: sub
-      filter: '(ou=*)'
+      filter: "(&(ou=*){{'(!('+openldap_test_users_rdn+'))' if openldap_test_users_rdn is defined else ''}}{{'(!('+openldap_test_groups_rdn+'))' if openldap_test_groups_rdn is defined else ''}})"
     - base: "{{openldap_default_policy_rdn}},{{openldap_policies_rdn}},{{openldap_suffix}}"
       scope: base
   become: true
