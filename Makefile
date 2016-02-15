@@ -1,6 +1,7 @@
 ANSIBLE_PLAYBOOK_PATH=	ansible-playbook
 ANSIBLE_PLAYBOOK_YAML=	site.yml
 
+ANSIBLE_LIMIT=		*
 ANSIBLE_OPTS=		-v
 ANSIBLE_STAGING_OPTS=
 ANSIBLE_PRODUCTION_OPTS=--ask-become-pass
@@ -40,17 +41,19 @@ distclean: destroy clean
 .PHONY: staging production
 
 production::
-	ANSIBLE_CONFIG=$@/ansible.cfg \
+	ANSIBLE_CONFIG=production/ansible.cfg \
 	$(ANSIBLE_PLAYBOOK_CMD) \
 	$(ANSIBLE_PRODUCTION_OPTS) \
-	  -i production/inventory.ini \
+	  --inventory=production/inventory.ini \
+	  --limit='$(ANSIBLE_LIMIT)' \
 	  $(ANSIBLE_PLAYBOOK_YAML)
 
 staging:: staging/ssh_config
-	ANSIBLE_CONFIG=$@/ansible.cfg \
+	ANSIBLE_CONFIG=staging/ansible.cfg \
 	$(ANSIBLE_PLAYBOOK_CMD) \
 	$(ANSIBLE_STAGING_OPTS) \
-	  -i staging/inventory.ini \
+	  --inventory=staging/inventory.ini \
+	  --limit='$(ANSIBLE_LIMIT)' \
 	  $(ANSIBLE_PLAYBOOK_YAML)
 
 staging/ssh_config: .vagrant/machines/*/*/*
