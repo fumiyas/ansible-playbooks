@@ -15,6 +15,7 @@ VAGRANT=		vagrant
 
 ## ======================================================================
 
+-include Makefile.hosts
 -include Makefile.local
 
 ## ======================================================================
@@ -31,7 +32,7 @@ usage:
 	@echo "  Usage: $(MAKE) <up|down|suspend|resume|status|destroy>"
 
 clean:
-	rm -f */*.tmp staging/ssh_config
+	rm -f Makefile.hosts */*.tmp staging/ssh_config
 
 distclean: destroy clean
 
@@ -70,12 +71,24 @@ staging/ssh_config: .vagrant/machines/*/*/*
 
 .PHONY: up halt down suspend resume destroy status
 
-up halt suspend resume status:
+up halt suspend resume status::
 	$(VAGRANT) $@
+
+up:: Makefile.ssh
 
 destroy:
 	$(VAGRANT) $@ --force
 	rm -rf .vagrant
 
 down: halt
+
+Makefile.hosts: staging/group_vars/all/hosts.yml
+	: >$@.tmp
+	for host in `$(VAGRANT) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
+	  for cmd in up down status destroy; do \
+	    echo "$$cmd.$$host:"; \
+	    echo '	$$(VAGRANT) '"$$cmd $$host"; \
+	  done; \
+	done >$@.tmp
+	mv $@.tmp $@
 
