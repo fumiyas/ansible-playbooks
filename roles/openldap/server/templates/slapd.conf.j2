@@ -51,8 +51,11 @@ password-crypt-salt-format "{{openldap_password_crypt_salt_format}}"
 
 {% if openldap_attribute_options is not none %}
 attributeoptions {{openldap_attribute_options |join(' ')}}
-
 {% endif %}
+{% if openldap_sort_values_attributes is not none %}
+sortvals {{openldap_sort_values_attributes |join(' ')}}
+{% endif %}
+
 ## Access control for Root DSE
 ## ----------------------------------------------------------------------
 

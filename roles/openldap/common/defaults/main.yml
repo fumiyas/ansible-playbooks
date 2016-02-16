@@ -53,6 +53,10 @@ openldap_schema_files:
 openldap_attribute_options:
   - lang-
   - phonetic
+openldap_sort_values_attributes:
+  - memberUid
+  - member
+  - host
 
 openldap_master_rdn: cn=master
 openldap_master_password: "{DISABLED}PASSWORD"
