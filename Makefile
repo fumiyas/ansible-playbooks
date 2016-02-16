@@ -69,7 +69,7 @@ staging/ssh_config: .vagrant/machines/*/*/*
 ## VM management
 ## ======================================================================
 
-.PHONY: up halt down suspend resume destroy status
+.PHONY: up halt down reload suspend resume destroy status
 
 up halt suspend resume status::
 	$(VAGRANT) $@
@@ -85,10 +85,12 @@ down: halt
 Makefile.hosts: staging/group_vars/all/hosts.yml
 	: >$@.tmp
 	for host in `$(VAGRANT) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
-	  for cmd in up down status destroy; do \
+	  for cmd in up halt reload suspend resume destroy status ssh ssh-config port rdp; do \
 	    echo "$$cmd.$$host:"; \
 	    echo '	$$(VAGRANT) '"$$cmd $$host"; \
 	  done; \
+	  echo "down.$$host:"; \
+	  echo '	$$(VAGRANT) '"halt $$host"; \
 	done >$@.tmp
 	mv $@.tmp $@
 
