@@ -24,8 +24,6 @@ VAGRANT_PATH=		vagrant
 
 ## ======================================================================
 
-.PHONY: default usage clean distclean
-
 default: usage
 
 usage:
@@ -40,10 +38,10 @@ clean:
 
 distclean: destroy clean
 
+.PHONY: default usage clean distclean
+
 ## Configuration management
 ## ======================================================================
-
-.PHONY: staging production
 
 staging:: staging/ssh_config
 
@@ -71,10 +69,10 @@ staging/ssh_config: .vagrant/machines/*/*/*
 
 .vagrant/machines/*/*/*: up
 
+.PHONY: staging production
+
 ## VM management
 ## ======================================================================
-
-.PHONY: up halt down reload suspend resume destroy status
 
 up halt reload suspend resume status::
 	$(VAGRANT_PATH) $@
@@ -100,4 +98,6 @@ Makefile.hosts: staging/group_vars/all/hosts.yml
 	  echo '	$$(VAGRANT_PATH) '"halt $$host"; \
 	done >$@.tmp
 	mv $@.tmp $@
+
+.PHONY: up halt down reload suspend resume destroy status
 
