@@ -33,7 +33,7 @@ usage:
 	@echo "  Usage: $(MAKE) <staging|production>"
 	@echo
 	@echo "VM management for staging environment by Vagrant and VirtualBox"
-	@echo "  Usage: $(MAKE) <up|down|suspend|resume|status|destroy>"
+	@echo "  Usage: $(MAKE) <up|down|restart|suspend|resume|status|destroy>"
 
 clean:
 	rm -rf $(PLAYBOOK:.yml=.retry) Makefile.hosts tmp */*.tmp staging/ssh_config
@@ -76,7 +76,7 @@ staging/ssh_config: .vagrant/machines/*/*/*
 
 .PHONY: up halt down reload suspend resume destroy status
 
-up halt suspend resume status::
+up halt reload suspend resume status::
 	$(VAGRANT_PATH) $@
 
 up:: Makefile.hosts
@@ -86,6 +86,8 @@ destroy:
 	rm -rf .vagrant
 
 down: halt
+
+restart: reload
 
 Makefile.hosts: staging/group_vars/all/hosts.yml
 	: >$@.tmp
