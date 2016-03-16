@@ -29,7 +29,7 @@ VAGRANT_PATH=		vagrant
 default: usage
 
 usage:
-	@echo "CMS by Ansible"
+	@echo "Configuration management by Ansible"
 	@echo "  Usage: $(MAKE) <staging|production>"
 	@echo
 	@echo "VM management for staging environment by Vagrant and VirtualBox"
@@ -40,7 +40,7 @@ clean:
 
 distclean: destroy clean
 
-## CMS
+## Configuration management
 ## ======================================================================
 
 .PHONY: staging production
