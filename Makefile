@@ -19,12 +19,14 @@ VAGRANT_PATH=		vagrant
 
 ## ======================================================================
 
+default: usage
+
+.PHONY: default
+
 -include Makefile.hosts
 -include Makefile.local
 
 ## ======================================================================
-
-default: usage
 
 usage:
 	@echo "Configuration management by Ansible"
@@ -38,7 +40,7 @@ clean:
 
 distclean: destroy clean
 
-.PHONY: default usage clean distclean
+.PHONY: usage clean distclean
 
 ## Configuration management
 ## ======================================================================
