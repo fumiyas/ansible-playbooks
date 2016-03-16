@@ -1,24 +1,21 @@
 LIMIT=		*
 TAGS=		all
+PLAYBOOK=	site.yml
 
 ANSIBLE_PLAYBOOK_PATH=	ansible-playbook
-ANSIBLE_PLAYBOOK_YAML=	site.yml
-
 ANSIBLE_OPTS=		-v
-ANSIBLE_STAGING_OPTS=
-ANSIBLE_PRODUCTION_OPTS=--ask-become-pass
-
 ANSIBLE_REMOTE_TEMP=	/tmp/.ansible.$$LOGNAME@`hostname`.tmp
 
 ANSIBLE_PLAYBOOK_CMD=\
-  ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
   $(ANSIBLE_PLAYBOOK_PATH) \
     $(ANSIBLE_OPTS) \
-    --limit='$(LIMIT)' \
-    --tags='$(TAGS)' \
-  #
+    --limit="$(LIMIT)" \
+    --tags="$(TAGS)" \
+    "$(PLAYBOOK)"
 
-VAGRANT=		vagrant
+## ----------------------------------------------------------------------
+
+VAGRANT_PATH=		vagrant
 
 ## ======================================================================
 
@@ -48,28 +45,31 @@ distclean: destroy clean
 
 .PHONY: staging production
 
-production::
-	ANSIBLE_CONFIG=production/ansible.cfg \
-	$(ANSIBLE_PLAYBOOK_CMD) \
-	$(ANSIBLE_PRODUCTION_OPTS) \
-	  --inventory=production/inventory.ini \
-	  $(ANSIBLE_PLAYBOOK_YAML)
-
 staging:: staging/ssh_config
-	ANSIBLE_CONFIG=staging/ansible.cfg \
-	$(ANSIBLE_PLAYBOOK_CMD) \
-	$(ANSIBLE_STAGING_OPTS) \
-	  --inventory=staging/inventory.ini \
-	  $(ANSIBLE_PLAYBOOK_YAML)
+
+staging production::
+	$(MAKE) play \
+	  ANSIBLE_CONFIG="$@/ansible.cfg "\
+	  ANSIBLE_INVENTORY="$@/inventory.ini" \
+	  ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
+	  ANSIBLE_PLAYBOOK_CMD="$(ANSIBLE_PLAYBOOK_CMD)" \
+
+play:
+	ANSIBLE_CONFIG="$(ANSIBLE_CONFIG)" \
+	ANSIBLE_INVENTORY='$(ANSIBLE_INVENTORY)' \
+	ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
+	  $(ANSIBLE_PLAYBOOK_CMD)
 
 staging/ssh_config: .vagrant/machines/*/*/*
 	: >$@.tmp
-	for host in `$(VAGRANT) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
-	  set -- $(VAGRANT) ssh-config $$host; \
+	for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
+	  set -- $(VAGRANT_PATH) ssh-config $$host; \
 	  echo "$$*"; \
 	  "$$@" >>$@.tmp || exit 1; \
 	done
 	mv $@.tmp $@
+
+.vagrant/machines/*/*/*: up
 
 ## VM management
 ## ======================================================================
@@ -77,25 +77,25 @@ staging/ssh_config: .vagrant/machines/*/*/*
 .PHONY: up halt down reload suspend resume destroy status
 
 up halt suspend resume status::
-	$(VAGRANT) $@
+	$(VAGRANT_PATH) $@
 
-up:: Makefile.ssh
+up:: Makefile.hosts
 
 destroy:
-	$(VAGRANT) $@ --force
+	$(VAGRANT_PATH) $@ --force
 	rm -rf .vagrant
 
 down: halt
 
 Makefile.hosts: staging/group_vars/all/hosts.yml
 	: >$@.tmp
-	for host in `$(VAGRANT) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
+	for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
 	  for cmd in up halt reload suspend resume destroy status ssh ssh-config port rdp; do \
 	    echo "$$cmd.$$host:"; \
-	    echo '	$$(VAGRANT) '"$$cmd $$host"; \
+	    echo '	$$(VAGRANT_PATH) '"$$cmd $$host"; \
 	  done; \
 	  echo "down.$$host:"; \
-	  echo '	$$(VAGRANT) '"halt $$host"; \
+	  echo '	$$(VAGRANT_PATH) '"halt $$host"; \
 	done >$@.tmp
 	mv $@.tmp $@
 
