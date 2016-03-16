@@ -1,15 +1,22 @@
+LIMIT=		*
+TAGS=		all
+
 ANSIBLE_PLAYBOOK_PATH=	ansible-playbook
 ANSIBLE_PLAYBOOK_YAML=	site.yml
 
-ANSIBLE_LIMIT=		*
 ANSIBLE_OPTS=		-v
 ANSIBLE_STAGING_OPTS=
 ANSIBLE_PRODUCTION_OPTS=--ask-become-pass
 
 ANSIBLE_REMOTE_TEMP=	/tmp/.ansible.$$LOGNAME@`hostname`.tmp
 
-ANSIBLE_PLAYBOOK_CMD=	ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
-			$(ANSIBLE_PLAYBOOK_PATH) $(ANSIBLE_OPTS)
+ANSIBLE_PLAYBOOK_CMD=\
+  ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
+  $(ANSIBLE_PLAYBOOK_PATH) \
+    $(ANSIBLE_OPTS) \
+    --limit='$(LIMIT)' \
+    --tags='$(TAGS)' \
+  #
 
 VAGRANT=		vagrant
 
@@ -46,7 +53,6 @@ production::
 	$(ANSIBLE_PLAYBOOK_CMD) \
 	$(ANSIBLE_PRODUCTION_OPTS) \
 	  --inventory=production/inventory.ini \
-	  --limit='$(ANSIBLE_LIMIT)' \
 	  $(ANSIBLE_PLAYBOOK_YAML)
 
 staging:: staging/ssh_config
@@ -54,7 +60,6 @@ staging:: staging/ssh_config
 	$(ANSIBLE_PLAYBOOK_CMD) \
 	$(ANSIBLE_STAGING_OPTS) \
 	  --inventory=staging/inventory.ini \
-	  --limit='$(ANSIBLE_LIMIT)' \
 	  $(ANSIBLE_PLAYBOOK_YAML)
 
 staging/ssh_config: .vagrant/machines/*/*/*
