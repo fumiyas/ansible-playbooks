@@ -49,7 +49,7 @@ staging:: staging/ssh_config
 
 staging production::
 	$(MAKE) play \
-	  ANSIBLE_CONFIG="$@/ansible.cfg "\
+	  ANSIBLE_CONFIG="$@/ansible.cfg" \
 	  ANSIBLE_INVENTORY="$@/inventory.ini" \
 	  ANSIBLE_REMOTE_TEMP="$(ANSIBLE_REMOTE_TEMP)" \
 	  ANSIBLE_PLAYBOOK_CMD="$(ANSIBLE_PLAYBOOK_CMD)" \
