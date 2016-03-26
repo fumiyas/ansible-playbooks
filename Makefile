@@ -36,7 +36,7 @@ usage:
 	@echo "  Usage: $(MAKE) <up|down|restart|suspend|resume|status|destroy>"
 
 clean:
-	rm -rf $(PLAYBOOK:.yml=.retry) Makefile.hosts tmp */*.tmp staging/ssh_config
+	rm -rf $(PLAYBOOK:.yml=.retry) Makefile.hosts */tmp */*.tmp staging/ssh_config
 
 distclean: destroy clean
 
