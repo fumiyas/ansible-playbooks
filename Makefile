@@ -89,7 +89,7 @@ down: halt
 
 restart: reload
 
-Makefile.hosts: staging/group_vars/all/hosts.yml
+Makefile.hosts: Makefile staging/group_vars/all/hosts.yml
 	: >$@.tmp
 	for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
 	  for cmd in up halt reload suspend resume destroy status ssh ssh-config port rdp; do \
