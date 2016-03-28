@@ -6,8 +6,8 @@
 
 - name: "slapd.conf"
   template:
-    src=slapd.conf.j2
-    dest={{openldap_sysconf_dir}}/slapd.conf
+    src=slapd.conf
+    dest={{openldap_sysconf_dir}}/
     owner=root
     group={{openldap_server_group}}
     mode=0640
@@ -23,7 +23,7 @@
 
 - name: "slapd default file"
   template:
-    src=slapd.default.j2
+    src=slapd.default
     dest={{openldap_server_default_file}}
     owner=root
     group=root

@@ -15,8 +15,8 @@
 
 - name: "dnsmasq.hosts"
   template:
-    src=dnsmasq.hosts.j2
-    dest={{dnsmasq_sysconf_dir}}/dnsmasq.hosts
+    src=dnsmasq.hosts
+    dest={{dnsmasq_sysconf_dir}}/
     mode=0755
     owner=root
     group=root

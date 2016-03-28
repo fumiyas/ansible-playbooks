@@ -1,7 +1,7 @@
 - name: "Test DIT data in LDIF file"
   template:
-    src=test.ldif.j2
-    dest={{openldap_sysconf_dir}}/test.ldif
+    src=test.ldif
+    dest={{openldap_sysconf_dir}}/
     owner=root
     group={{openldap_server_group}}
     mode=0640

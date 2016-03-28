@@ -1,7 +1,7 @@
 - name: "Base DIT data in LDIF file"
   template:
-    src=base.ldif.j2
-    dest={{openldap_sysconf_dir}}/base.ldif
+    src=base.ldif
+    dest={{openldap_sysconf_dir}}/
     owner=root
     group={{openldap_server_group}}
     mode=0640

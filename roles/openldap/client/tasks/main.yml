@@ -6,8 +6,8 @@
 
 - name: "ldap.conf"
   template:
-    src=ldap.conf.j2
-    dest={{openldap_sysconf_dir}}/ldap.conf
+    src=ldap.conf
+    dest={{openldap_sysconf_dir}}/
     owner=root
     group=root
     mode=0644
