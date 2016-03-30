@@ -1,4 +1,4 @@
-- name: "OpenLDAP client and server"
+- name: "OpenLDAP: Client and Server"
   hosts: openldap
   roles:
     - openldap
@@ -7,7 +7,7 @@
     - openldap/client
     - openldap/server
 
-- name: "OpenLDAP DIT"
+- name: "OpenLDAP: DIT data in LDIF and provisioning"
   hosts: openldap/dit
   roles:
     - openldap/dit/base
@@ -17,7 +17,7 @@
     - openldap
     - openldap/dit
 
-- name: "OpenLDAP client"
+- name: "OpenLDAP: Client"
   hosts: openldap/client
   roles:
     - openldap/client

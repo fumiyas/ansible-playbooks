@@ -1,4 +1,4 @@
-- name: "dnsmasq to reflect hosts definition in hosts variable"
+- name: "dnsmasq: DNS cache and contents server to reflect hosts.yml"
   hosts: dnsmasq/hosts
   roles:
     - role: dnsmasq/hosts
