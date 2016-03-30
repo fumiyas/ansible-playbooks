@@ -1,9 +1,9 @@
 - name: "dnsmasq to reflect hosts definition in hosts variable"
-  hosts: dnsmasq-hosts
+  hosts: dnsmasq/hosts
   roles:
     - role: dnsmasq/hosts
       when: inventory == 'staging'
   tags:
     - dnsmasq
-    - dnsmasq-hosts
+    - dnsmasq/hosts
 

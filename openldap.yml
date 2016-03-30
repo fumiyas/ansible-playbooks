@@ -4,24 +4,24 @@
     - openldap
   tags:
     - openldap
-    - openldap-client
-    - openldap-server
+    - openldap/client
+    - openldap/server
 
 - name: "OpenLDAP DIT"
-  hosts: openldap-dit
+  hosts: openldap/dit
   roles:
     - openldap/dit/base
     - role: openldap/dit/test
       when: inventory == 'staging'
   tags:
     - openldap
-    - openldap-dit
+    - openldap/dit
 
 - name: "OpenLDAP client"
-  hosts: openldap-client
+  hosts: openldap/client
   roles:
     - openldap/client
   tags:
     - openldap
-    - openldap-client
+    - openldap/client
 
