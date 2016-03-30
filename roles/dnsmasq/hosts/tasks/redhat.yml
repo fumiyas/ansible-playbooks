@@ -1,11 +1,11 @@
 - name: "dhclient.d/dnsmasq.sh"
   copy:
-    src=dhclient-dnsmasq.sh
-    dest=/etc/dhcp/dhclient.d/dnsmasq.sh
-    mode=0755
-    owner=root
-    group=root
-    backup=true
+    src: dhclient-dnsmasq.sh
+    dest: /etc/dhcp/dhclient.d/dnsmasq.sh
+    mode: 0755
+    owner: root
+    group: root
+    backup: true
   become: true
   notify: network reload
 
@@ -18,11 +18,11 @@
 ## FIXME: nmcli con mod {{if}} ipv4.ignore-auto-dns yes
 - name: "PEERDNS=no"
   lineinfile:
-    dest={{item}}
-    state=present
-    regexp='^PEERDNS='
-    line='PEERDNS=no'
-    backup=true
+    dest: "{{item}}"
+    state: present
+    regexp: '^PEERDNS='
+    line: 'PEERDNS=no'
+    backup: true
   with_items: "{{ifcfgs.stdout_lines}}"
   become: true
   notify: network reload

@@ -6,51 +6,51 @@
 
 - name: "slapd.conf"
   template:
-    src=slapd.conf
-    dest={{openldap_sysconf_dir}}/
-    owner=root
-    group={{openldap_server_group}}
-    mode=0640
-    backup=true
+    src: slapd.conf
+    dest: "{{openldap_sysconf_dir}}/"
+    owner: root
+    group: "{{openldap_server_group}}"
+    mode: 0640
+    backup: true
   become: true
   notify: slapd reload
 
 - name: "slapd.d (remove to disable slapd-config(5))"
   file:
-    path={{openldap_sysconf_dir}}/slapd.d
-    state=absent
+    path: "{{openldap_sysconf_dir}}/slapd.d"
+    state: absent
   become: true
 
 - name: "slapd default file"
   template:
-    src=slapd.default
-    dest={{openldap_server_default_file}}
-    owner=root
-    group=root
-    mode=0644
-    backup=true
+    src: slapd.default
+    dest: "{{openldap_server_default_file}}"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
   become: true
   when: openldap_server_default_file is not none
   notify: slapd reload
 
 - name: "Schema files"
   copy:
-    src={{item}}
-    dest={{openldap_sysconf_dir}}/schema/
-    mode=0644
-    owner=root
-    group=root
+    src: "{{item}}"
+    dest: "{{openldap_sysconf_dir}}/schema/"
+    mode: 0644
+    owner: root
+    group: root
   with_items: "{{openldap_schema_files}}"
   become: true
   when: openldap_schema_files is not none
 
 - name: "TLS certificate and private directory"
   file:
-    path={{item.path}}
-    state=directory
-    mode={{'0%o' |format(item.mode)}}
-    owner={{item.owner}}
-    group={{item.group}}
+    path: "{{item.path}}"
+    state: directory
+    mode: "{{'0%o' |format(item.mode)}}"
+    owner: "{{item.owner}}"
+    group: "{{item.group}}"
   with_items:
     - path: "{{openldap_sysconf_dir}}/certs"
       mode: 0755
@@ -64,44 +64,44 @@
 
 - name: "TLS CA certificate file"
   copy:
-    src={{openldap_tls_src_dir}}/{{openldap_tls_ca_certificate_file_name}}
-    dest={{openldap_sysconf_dir}}/certs/
-    mode=0444
-    owner=root
-    group=root
+    src: "{{openldap_tls_src_dir}}/{{openldap_tls_ca_certificate_file_name}}"
+    dest: "{{openldap_sysconf_dir}}/certs/"
+    mode: 0444
+    owner: root
+    group: root
   become: true
   when: openldap_tls_src_dir is not none and openldap_tls_ca_certificate_file_name is not none
   notify: slapd reload
 
 - name: "TLS certificate file"
   copy:
-    src={{openldap_tls_src_dir}}/{{openldap_tls_certificate_file_name}}
-    dest={{openldap_sysconf_dir}}/certs/
-    mode=0444
-    owner=root
-    group=root
+    src: "{{openldap_tls_src_dir}}/{{openldap_tls_certificate_file_name}}"
+    dest: "{{openldap_sysconf_dir}}/certs/"
+    mode: 0444
+    owner: root
+    group: root
   become: true
   when: openldap_tls_src_dir is not none and openldap_tls_certificate_file_name is not none
   notify: slapd reload
 
 - name: "TLS key file"
   copy:
-    src={{openldap_tls_src_dir}}/{{openldap_tls_key_file_name}}
-    dest={{openldap_sysconf_dir}}/private/
-    mode=0440
-    owner=root
-    group={{openldap_server_group}}
+    src: "{{openldap_tls_src_dir}}/{{openldap_tls_key_file_name}}"
+    dest: "{{openldap_sysconf_dir}}/private/"
+    mode: 0440
+    owner: root
+    group: "{{openldap_server_group}}"
   become: true
   when: openldap_tls_src_dir is not none and openldap_tls_key_file_name is not none
   notify: slapd reload
 
 - name: "DB directry"
   file:
-    path={{openldap_db_dir}}
-    state=directory
-    owner={{openldap_server_user}}
-    group={{openldap_server_group}}
-    mode=700
+    path: "{{openldap_db_dir}}"
+    state: directory
+    owner: "{{openldap_server_user}}"
+    group: "{{openldap_server_group}}"
+    mode: 0700
   become: true
   register: db_dir
 
@@ -113,8 +113,8 @@
 
 - name: "slapd service"
   service:
-    name={{openldap_server_service_name}}
-    state=started
-    enabled=true
+    name: "{{openldap_server_service_name}}"
+    state: started
+    enabled: true
   become: true
 

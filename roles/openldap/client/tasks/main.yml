@@ -6,30 +6,30 @@
 
 - name: "ldap.conf"
   template:
-    src=ldap.conf
-    dest={{openldap_sysconf_dir}}/
-    owner=root
-    group=root
-    mode=0644
-    backup=true
+    src: ldap.conf
+    dest: "{{openldap_sysconf_dir}}/"
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
   become: true
 
 - name: "TLS certificate directory"
   file:
-    path={{openldap_sysconf_dir}}/certs
-    state=directory
-    mode=0755
-    owner=root
-    group=root
+    path: "{{openldap_sysconf_dir}}/certs"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
   become: true
 
 - name: "TLS CA certificate file"
   copy:
-    src={{openldap_tls_src_dir}}/{{openldap_tls_ca_certificate_file_name}}
-    dest={{openldap_sysconf_dir}}/certs/
-    mode=0444
-    owner=root
-    group=root
+    src: "{{openldap_tls_src_dir}}/{{openldap_tls_ca_certificate_file_name}}"
+    dest: "{{openldap_sysconf_dir}}/certs/"
+    mode: 0444
+    owner: root
+    group: root
   become: true
   when: openldap_tls_src_dir is not none and openldap_tls_ca_certificate_file_name is not none
 

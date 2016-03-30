@@ -1,7 +1,7 @@
 - name: "slapd reload"
   ## reload not supported
   service:
-    name={{openldap_server_service_name}}
-    state=restarted
+    name: "{{openldap_server_service_name}}"
+    state: restarted
   become: true
 

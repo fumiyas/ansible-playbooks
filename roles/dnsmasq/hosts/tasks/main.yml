@@ -4,23 +4,23 @@
 
 - name: "dnsmasq.conf"
   copy:
-    src=dnsmasq.conf
-    dest={{dnsmasq_sysconf_dir}}/dnsmasq.conf
-    mode=0755
-    owner=root
-    group=root
-    backup=true
+    src: dnsmasq.conf
+    dest: "{{dnsmasq_sysconf_dir}}/dnsmasq.conf"
+    mode: 0755
+    owner: root
+    group: root
+    backup: true
   become: true
   notify: dnsmasq reload
 
 - name: "dnsmasq.hosts"
   template:
-    src=dnsmasq.hosts
-    dest={{dnsmasq_sysconf_dir}}/
-    mode=0755
-    owner=root
-    group=root
-    backup=true
+    src: dnsmasq.hosts
+    dest: "{{dnsmasq_sysconf_dir}}/"
+    mode: 0755
+    owner: root
+    group: root
+    backup: true
   become: true
   notify: dnsmasq reload
 
@@ -38,26 +38,26 @@
 ## FIXME: nmcli con mod {{if}} ipv4.dns 127.0.0.1
 - name: "resolv.conf"
   copy:
-    src=resolv.conf
-    dest=/etc/resolv.conf
-    mode=0755
-    owner=root
-    group=root
-    backup=true
+    src: resolv.conf
+    dest: /etc/resolv.conf
+    mode: 0755
+    owner: root
+    group: root
+    backup: true
   become: true
 
 - name: "dnsmasq.resolv.conf"
   stat:
-    path={{dnsmasq_sysconf_dir}}/dnsmasq.resolv.conf
+    path: "{{dnsmasq_sysconf_dir}}/dnsmasq.resolv.conf"
   register: resolv_dnsmasq_conf
   changed_when: not resolv_dnsmasq_conf.stat.exists
   notify: network reload
 
 - name: "dnsmasq service"
   service:
-    name={{item}}
-    state=running
-    enabled=true
+    name: "{{item}}"
+    state: running
+    enabled: true
   with_items:
     - dnsmasq
   become: true
