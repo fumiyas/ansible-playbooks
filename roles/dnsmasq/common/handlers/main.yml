@@ -1,7 +1,8 @@
 - name: "dnsmasq reload"
   service:
     name: dnsmasq
-    state: reloaded
+    ## "reload" not supported
+    state: restarted
   become: true
 
 - name: "dnsmasq restart"
