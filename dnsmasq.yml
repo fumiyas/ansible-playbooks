@@ -1,5 +1,5 @@
 - name: "dnsmasq: DNS cache and contents server to reflect hosts.yml"
-  hosts: dnsmasq/hosts
+  hosts: dnsmasq-hosts
   roles:
     - role: dnsmasq/hosts
       when: inventory == 'staging'
