@@ -17,6 +17,14 @@ ANSIBLE_PLAYBOOK_CMD=\
 
 VAGRANT_PATH=		vagrant
 
+## ----------------------------------------------------------------------
+
+DIFF=		diff
+DIFF_EDITOR=	vimdiff
+
+DIFF_CMD=	LC_ALL=C $(DIFF)
+DIFF_RECURSE=	$(DIFF_CMD) -r -x tmp -x ssh_config staging production
+
 ## ======================================================================
 
 default: usage
@@ -102,4 +110,23 @@ Makefile.hosts: Makefile staging/group_vars/all/hosts.yml
 	mv $@.tmp $@
 
 .PHONY: up halt down reload suspend resume destroy status
+
+## ======================================================================
+
+diff:
+	@$(DIFF_RECURSE); true
+
+difflist:
+	@$(DIFF_RECURSE) \
+	|sed -n \
+	  -e 's|^diff .* [^/]*/|*/|p' \
+	  -e 's|^Only in [^/]*/\(.*\): \(\)|*/\1/\2|p' \
+	; true
+
+diffedit:
+	@for f in `$(DIFF_RECURSE) |sed -n 's/^diff .* //p'`; do \
+	  $(DIFF_EDITOR) "staging/$${f#*/}" "$$f" || break; \
+	done
+
+.PHONY: diff difflist diffedit
 
