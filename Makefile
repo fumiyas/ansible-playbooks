@@ -69,13 +69,13 @@ play:
 	  $(ANSIBLE_PLAYBOOK_CMD)
 
 staging/ssh_config: .vagrant/machines/*/*/*
-	: >$@.tmp
-	for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
+	@: >$@.tmp
+	@for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
 	  set -- $(VAGRANT_PATH) ssh-config $$host; \
 	  echo "$$*"; \
 	  "$$@" >>$@.tmp || exit 1; \
 	done
-	mv $@.tmp $@
+	@mv $@.tmp $@
 
 .vagrant/machines/*/*/*: up
 
@@ -98,8 +98,8 @@ down: halt
 restart: reload
 
 Makefile.hosts: Makefile staging/group_vars/all/hosts.yml
-	: >$@.tmp
-	for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
+	@: >$@.tmp
+	@for host in `$(VAGRANT_PATH) status |sed -n '3,/^$$/{s/ *running .*//p}'`; do \
 	  for cmd in up halt reload suspend resume destroy status ssh ssh-config port rdp; do \
 	    echo "$$cmd.$$host:"; \
 	    echo '	$$(VAGRANT_PATH) '"$$cmd $$host"; \
@@ -107,7 +107,7 @@ Makefile.hosts: Makefile staging/group_vars/all/hosts.yml
 	  echo "down.$$host:"; \
 	  echo '	$$(VAGRANT_PATH) '"halt $$host"; \
 	done >$@.tmp
-	mv $@.tmp $@
+	@mv $@.tmp $@
 
 .PHONY: up halt down reload suspend resume destroy status
 
