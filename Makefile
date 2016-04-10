@@ -23,7 +23,7 @@ DIFF=		diff
 DIFF_EDITOR=	vimdiff
 
 DIFF_CMD=	LC_ALL=C $(DIFF)
-DIFF_RECURSE=	$(DIFF_CMD) -r -x tmp -x ssh_config staging production
+DIFF_RECURSE=	$(DIFF_CMD) -upr -x tmp -x ssh_config staging production
 
 ## ======================================================================
 
